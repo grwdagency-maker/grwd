@@ -219,16 +219,17 @@
 
 			</div>
 
-			<footer id="footer">
-                <div class="footer-content">
-				    <div class="copyright">&copy; GRWD 2026. All rights reserved.</div>
-                    <div class="legal-info">
-                        GRWD Agency<br>
-                        Warsaw, Poland<br>
-                        NIP: [YOUR_NIP_HERE]
-                    </div>
-                </div>
-			</footer>
+<footer id="footer">
+    <div class="footer-content">
+        <div class="copyright">&copy; GRWD 2026. All rights reserved.</div>
+        <div class="legal-info">
+            <strong>GRWD</strong> (Operated by PixelPeak Dzmitry Ladzes)<br>
+            ul. Czesława Niemena 6 lok. 111<br>
+            61-131 Poznań, Poland<br>
+            NIP: 7822926626
+        </div>
+    </div>
+</footer>
 
             <script>
                 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -241,8 +242,6 @@
                 });
             </script>
 		<script>
-    // 1. Mouse Spotlight Logic
-    // Отслеживаем движение мыши и передаем координаты в CSS переменные
     document.addEventListener('mousemove', (e) => {
         const x = e.clientX;
         const y = e.clientY;
@@ -250,12 +249,10 @@
         document.body.style.setProperty('--mouse-y', `${y}px`);
     });
 
-    // 2. Scroll Observer (Timeline & Sections)
-    // Эта штука следит, когда элемент появляется на экране
     const observerOptions = {
         root: null,
         rootMargin: '0px',
-        threshold: 0.3 // Срабатывает, когда видно 30% элемента
+        threshold: 0.3
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -263,24 +260,20 @@
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
             } else {
-                // Если хочешь, чтобы гасло, когда уходит с экрана - раскомментируй строку ниже
                 // entry.target.classList.remove('active');
             }
         });
     }, observerOptions);
 
-    // Подключаем слежку к элементам таймлайна
     document.querySelectorAll('.timeline-item').forEach(el => {
         observer.observe(el);
     });
     
-    // Подключаем слежку к карточкам (для красивого появления)
     document.querySelectorAll('.bento-card').forEach((el, index) => {
-        el.style.transitionDelay = `${index * 100}ms`; // Каскадная задержка
+        el.style.transitionDelay = `${index * 100}ms`;
         observer.observe(el);
     });
 
-    // 3. Smooth Scroll Anchor Links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -292,5 +285,3 @@
 </script>
 	</body>
 </html>
-
-
