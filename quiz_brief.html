@@ -186,6 +186,36 @@
                 .quiz-container { padding: 25px; }
                 h2#question { font-size: 20px; }
             }
+
+			#footer {
+    position: fixed; /* Фиксируем внизу экрана */
+    bottom: 0;
+    left: 260px; /* Отступ слева (ширина сайдбара) */
+    width: calc(100% - 260px); /* Занимаем оставшуюся ширину */
+    padding: 20px;
+    background: transparent; /* Убираем фон, чтобы он сливался */
+    border: none; /* Убираем рамку, она здесь лишняя */
+    z-index: 10; /* Поверх декораций */
+    pointer-events: none; /* Чтобы текст не мешал кликам, если наедет на что-то */
+}
+
+.footer-content {
+    opacity: 0.4; /* Делаем текст приглушенным "техническим" */
+    font-family: 'Inter', monospace; /* Моноширинный стиль для эстетики */
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+@media screen and (max-width: 900px) {
+    #footer {
+        position: relative; /* На мобилках возвращаем в поток */
+        left: 0;
+        width: 100%;
+        padding-bottom: 40px;
+        opacity: 0.5;
+    }
+}
         </style>
 	</head>
 	<body class="is-preload">
