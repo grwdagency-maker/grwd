@@ -11,131 +11,138 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
         
         <style>
-/* === QUIZ SPECIFIC STYLES (FULL SET) === */
+<style>
+        /* === QUIZ SPECIFIC STYLES (Fixed Footer + Glass Design) === */
 
-        /* 1. LAYOUT STRUCTURE (Fixing the Footer) */
+        /* 1. MAIN LAYOUT ENGINE */
         #wrapper {
+            /* Принудительно задаем структуру Flex-колонки */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            /* margin-left: 260px; — этот отступ уже есть в main.css для десктопа */
+            margin-left: 260px; /* Отступ для сайдбара */
+            position: relative;
+            z-index: 1;
         }
 
-        /* Обертка квиза занимает всё свободное место между шапкой и футером */
+        /* 2. QUIZ CENTER WRAPPER */
+        /* Этот блок занимает все свободное место и центрирует квиз */
         .quiz-wrapper {
-            flex: 1; 
+            flex: 1; /* Растягивается, толкая футер вниз */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 60px 20px; /* Отступы сверху/снизу, чтобы было просторно */
+            padding: 60px 20px;
         }
 
-        /* 2. QUIZ CONTAINER (Glassmorphism / Terminal Look) */
+        /* 3. TERMINAL / GLASS CONTAINER (Design Restore) */
         .quiz-container {
-            background: rgba(10, 14, 20, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(10, 14, 20, 0.7); /* Темное стекло */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             width: 100%;
-            max-width: 650px;
+            max-width: 680px;
             border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6); /* Глубокая тень */
             position: relative;
             overflow: hidden;
-            padding: 40px;
+            padding: 50px;
         }
 
-        /* Декоративная неоновая линия сверху */
+        /* Неоновая линия сверху */
         .quiz-container::before {
             content: ''; 
             position: absolute; top: 0; left: 0; width: 100%; height: 2px;
             background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            box-shadow: 0 0 15px var(--accent-cyan);
         }
 
-        /* 3. PROGRESS BAR */
+        /* 4. PROGRESS BAR */
         .progress-container {
             width: 100%;
             background: rgba(255,255,255,0.05);
             height: 4px;
             border-radius: 2px;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             overflow: hidden;
         }
         .progress-fill {
             height: 100%;
             background: var(--accent-cyan);
             width: 0%;
-            transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
             box-shadow: 0 0 10px var(--accent-cyan);
         }
 
-        /* 4. TYPOGRAPHY */
+        /* 5. TYPOGRAPHY */
         .section-label {
             font-family: 'Outfit', sans-serif;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--accent-cyan);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 10px;
+            letter-spacing: 0.2em;
+            margin-bottom: 15px;
             display: block;
-            opacity: 0.8;
+            opacity: 0.9;
         }
         h2#question {
             font-family: 'Outfit', sans-serif;
             color: #fff;
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: 600;
             margin-bottom: 10px;
-            line-height: 1.3;
+            line-height: 1.2;
         }
         .hint {
-            color: #888;
+            color: #777;
             font-size: 14px;
             display: block;
-            margin-bottom: 30px;
-            font-style: italic;
+            margin-bottom: 35px;
+            font-family: 'Inter', sans-serif;
         }
 
-        /* 5. OPTIONS (Buttons & Inputs) */
+        /* 6. INTERACTIVE OPTIONS */
         .option {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 15px 20px;
-            border-radius: 6px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 18px 24px;
+            border-radius: 8px;
             margin-bottom: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
             display: flex;
             align-items: center;
             color: #ccc;
-            font-size: 15px;
+            font-size: 16px;
         }
 
         .option:hover {
-            background: rgba(255,255,255,0.07);
-            border-color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.2);
             color: #fff;
-            transform: translateX(5px);
+            transform: translateX(4px);
         }
 
         .option.selected {
-            background: rgba(0, 240, 255, 0.1);
+            background: rgba(0, 240, 255, 0.08);
             border-color: var(--accent-cyan);
             color: #fff;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.05);
         }
 
-        /* Custom Radio/Checkbox Indicator */
+        /* Indicators (Radio/Check) */
         .indicator {
-            width: 18px; height: 18px;
-            border: 2px solid #555;
+            width: 20px; height: 20px;
+            border: 2px solid #444;
             border-radius: 50%;
-            margin-right: 15px;
+            margin-right: 18px;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
             transition: 0.2s;
         }
-        .multiple .indicator { border-radius: 3px; } /* Square for checkboxes */
+        .multiple .indicator { border-radius: 4px; } 
 
         .option.selected .indicator {
             border-color: var(--accent-cyan);
@@ -143,29 +150,96 @@
             box-shadow: 0 0 10px var(--accent-cyan);
         }
 
-        /* Text Inputs inside options */
+        /* Inputs inside options */
         .custom-input {
             background: transparent;
             border: none;
-            border-bottom: 1px solid #555;
+            border-bottom: 1px solid #444;
             color: #fff;
             font-family: 'Inter', sans-serif;
-            font-size: 15px;
+            font-size: 16px;
             padding: 5px 0;
             width: 100%;
             outline: none;
             transition: 0.3s;
         }
-        .custom-input:focus {
-            border-bottom-color: var(--accent-cyan);
-        }
+        .custom-input:focus { border-bottom-color: var(--accent-cyan); }
         .custom-input.error { border-bottom-color: var(--alert-red); }
         .error-msg { color: var(--alert-red); font-size: 12px; margin-top: 5px; display: none; }
         .show-error .error-msg { display: block; }
 
-        /* 6. ACTION BUTTONS (Next / Submit) */
+        /* 7. ACTION BUTTONS */
         .btn-action {
-            margin-top: 30px;
+            margin-top: 35px;
+            width: 100%;
+            background: transparent;
+            border: 1px solid #333;
+            color: #555;
+            padding: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 700;
+            cursor: not-allowed;
+            transition: all 0.3s;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .btn-action:not(:disabled) {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.05);
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+        .btn-action:not(:disabled):hover {
+            background: var(--accent-cyan);
+            color: #050505;
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* 8. RESULT SCREEN */
+        .result-screen { text-align: center; display: none; padding: 20px; }
+        .result-screen h2 { color: #fff; font-size: 32px; margin-bottom: 15px; font-family: 'Outfit', sans-serif; }
+        .result-screen p { color: #aaa; margin-bottom: 20px; font-size: 16px; line-height: 1.6; }
+        .check-animation {
+            font-size: 60px; color: var(--accent-cyan); margin-bottom: 30px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 0 30px var(--accent-cyan);
+        }
+        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* 9. FOOTER (FLEXBOX FIX) */
+        #footer {
+            margin-top: auto; /* ЭТО КЛЮЧ: Прижимает футер к низу контейнера */
+            width: 100%;
+            border-top: 1px solid var(--border-light);
+            padding: 40px 0; /* Отступы внутри футера */
+            background: transparent;
+            position: relative; /* Не fixed, а relative внутри flex-контейнера */
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 90%; /* Ограничиваем ширину контента */
+            margin: 0 auto;
+            font-size: 11px;
+            color: #555;
+            text-transform: none;
+        }
+        .legal-info { text-align: right; line-height: 1.4; }
+
+        /* 10. MOBILE ADAPTATION */
+        @media screen and (max-width: 900px) {
+            #wrapper { margin-left: 0; } /* Убираем отступ сайдбара */
+            .quiz-container { padding: 30px 20px; width: 95%; }
+            h2#question { font-size: 22px; }
+            .footer-content { flex-direction: column; gap: 20px; text-align: center; }
+            .legal-info { text-align: center; }
+        }
+    </style>
         </style>
 	</head>
 	<body class="is-preload">
