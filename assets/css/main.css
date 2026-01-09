@@ -3908,67 +3908,144 @@ input, select, textarea {
 
 		}
 
-/* --- GRWD 2026 BRANDING CORE --- */
+/* =========================================
+   GRWD 2026 DESIGN SYSTEM OVERRIDE
+   ========================================= */
+
 :root {
-    --color-pink: #DB53AA;
-    --color-cyan: #01FFFF;
-    --color-blue: #0281FF;
-    --bg-dark: #050a15; /* Глубокий космический черный */
-    --glass-bg: rgba(5, 10, 21, 0.7);
+    --neon-pink: #DB53AA;
+    --neon-cyan: #01FFFF;
+    --neon-blue: #0281FF;
+    --deep-space: #050a14;
+    --grid-color: rgba(1, 255, 255, 0.05);
 }
 
-body { 
-    background-color: var(--bg-dark) !important; 
-    color: rgba(255, 255, 255, 0.8) !important;
+/* 1. БАЗА И ФОН */
+body, .wrapper.style1, .wrapper.style2, .wrapper.style3 {
+    background-color: var(--deep-space) !important;
+    background-image: 
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px) !important;
+    background-size: 40px 40px !important; /* Эффект инженерной сетки */
+    font-family: 'Inter', sans-serif !important;
 }
 
-/* Sidebar: Glassmorphism effect */
+h1, h2, h3, h4, .brand-logo {
+    font-family: 'Outfit', sans-serif !important;
+    letter-spacing: -0.02em !important;
+    color: #ffffff !important;
+}
+
+/* 2. САЙДБАР (СТЕКЛО) */
 #sidebar {
-    background: var(--glass-bg) !important;
-    backdrop-filter: blur(15px); /* Размытие фона за панелью */
-    border-right: 1px solid rgba(1, 255, 255, 0.1);
+    background: rgba(5, 10, 20, 0.6) !important;
+    backdrop-filter: blur(20px) !important; /* Размытие фона */
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.brand-logo {
+    font-weight: 900;
+    font-size: 2em;
+    color: var(--neon-cyan) !important;
+    text-align: right;
+    padding-bottom: 2em;
+    text-shadow: 0 0 15px rgba(1, 255, 255, 0.4);
+}
+
+#sidebar nav a {
+    color: rgba(255, 255, 255, 0.6) !important;
+    border: none !important;
 }
 
 #sidebar nav a.active {
-    color: var(--color-cyan) !important;
+    color: var(--neon-cyan) !important;
 }
 
 #sidebar nav a.active:after {
-    background: linear-gradient(to bottom, var(--color-cyan), var(--color-blue)) !important;
+    background: linear-gradient(to bottom, var(--neon-cyan), var(--neon-blue)) !important;
     width: 4px !important;
-    max-width: 4px !important;
+    box-shadow: 0 0 10px var(--neon-cyan);
 }
 
-/* Titles: Neon Glow */
-h1, h2, h3 { 
-    color: #ffffff !important;
-    text-shadow: 0 0 15px rgba(1, 255, 255, 0.3);
+/* 3. ГЛАВНЫЙ ЭКРАН */
+#intro h1 {
+    font-size: 3.5em;
+    background: -webkit-linear-gradient(0deg, #ffffff, var(--neon-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 5px rgba(1, 255, 255, 0.3));
 }
 
-h1.major:after {
-    background-image: linear-gradient(to right, var(--color-pink), var(--color-blue)) !important;
+.highlight {
+    color: var(--neon-pink);
+    font-weight: bold;
 }
 
-/* Action Buttons */
+/* 4. КНОПКИ (НЕОН) */
 .button.primary {
-    background: linear-gradient(45deg, var(--color-pink), var(--color-blue)) !important;
-    border: none !important;
-    color: #ffffff !important;
-    box-shadow: 0 4px 15px rgba(219, 83, 170, 0.4);
+    background: transparent !important;
+    border: 2px solid var(--neon-cyan) !important;
+    color: var(--neon-cyan) !important;
+    box-shadow: 0 0 15px rgba(1, 255, 255, 0.2), inset 0 0 10px rgba(1, 255, 255, 0.1) !important;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     transition: all 0.3s ease;
 }
 
 .button.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(1, 255, 255, 0.5);
-    background: var(--color-cyan) !important;
-    color: var(--bg-dark) !important;
+    background: var(--neon-cyan) !important;
+    color: var(--deep-space) !important;
+    box-shadow: 0 0 30px rgba(1, 255, 255, 0.6) !important;
 }
 
-/* Icons */
+/* 5. СЕКЦИИ УСЛУГ (СТЕКЛЯННЫЕ КАРТОЧКИ) */
+.spotlights > section {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.spotlights > section > .content {
+    background: rgba(255, 255, 255, 0.02) !important;
+    backdrop-filter: blur(5px);
+    border-left: 1px solid var(--neon-blue);
+}
+
+/* 6. ИКОНКИ И ПРОЦЕСС */
 .icon.major {
-    background-color: transparent !important;
-    border: 2px solid var(--color-cyan) !important;
-    color: var(--color-cyan) !important;
-    box-shadow: inset 0 0 10px rgba(1, 255, 255, 0.2);
+    background: transparent !important;
+    color: var(--neon-pink) !important;
+    border: 2px solid var(--neon-pink) !important;
+    box-shadow: 0 0 15px rgba(219, 83, 170, 0.3);
+}
+
+.features section {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.01);
+    transition: transform 0.3s ease;
+}
+
+.features section:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid var(--neon-cyan) !important;
+}
+
+/* 7. ФОРМЫ (ТЕРМИНАЛ СТИЛЬ) */
+input[type="text"], input[type="email"], textarea {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: var(--neon-cyan) !important;
+    font-family: 'Inter', monospace;
+}
+
+input:focus, textarea:focus {
+    border-color: var(--neon-cyan) !important;
+    box-shadow: 0 0 10px rgba(1, 255, 255, 0.2) !important;
+}
+
+/* Линия под заголовками */
+h1.major:after, h2:after {
+    background: linear-gradient(to right, var(--neon-pink), var(--neon-blue)) !important;
+    height: 3px !important;
 }
