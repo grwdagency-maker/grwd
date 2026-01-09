@@ -200,3 +200,80 @@ ul { list-style: none; }
     .timeline-number { width: 32px; height: 32px; line-height: 30px; left: 0; }
     .timeline-item { padding-left: 50px; }
 }
+
+/* --- FIXES & POLISH --- */
+
+/* 1. Sidebar Logo & Layout */
+#sidebar {
+    padding: 50px 30px; /* Больше воздуха */
+    justify-content: flex-start; /* Меню сверху, а не по центру */
+}
+
+.sidebar-header {
+    margin-bottom: 60px; /* Отступ от лого до меню */
+}
+
+.logo-image {
+    width: 40px; /* Размер лого */
+    height: auto;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.brand-logo {
+    font-size: 24px;
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+.brand-sub {
+    margin-top: 5px;
+    font-size: 10px;
+    opacity: 0.5;
+    letter-spacing: 0.3em;
+}
+
+/* 2. Menu Items (System Style) */
+#sidebar nav a {
+    font-family: var(--font-head); /* Шрифт заголовков для меню */
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    padding: 18px 0; /* Больше отступы между пунктами */
+    border-bottom: 1px solid rgba(255,255,255,0.03); /* Тонкие линии-разделители */
+    border-left: none !important; /* Убираем линию слева */
+    opacity: 0.6;
+}
+
+#sidebar nav a:hover, #sidebar nav a.active {
+    opacity: 1;
+    color: var(--accent-cyan);
+    padding-left: 10px; /* Сдвиг при наведении */
+}
+
+/* 3. CTA Centering Fix */
+#cta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#cta .inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Жесткая центровка по горизонтали */
+    justify-content: center;
+    width: 100%;
+}
+
+#cta h2 {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 4. Icon Colors Fix */
+.card-icon.blue { color: var(--accent-blue); }
+.card-icon.pink { color: var(--alert-red); }
+.card-icon { color: var(--accent-cyan); } /* Default */
