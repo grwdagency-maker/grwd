@@ -187,4 +187,33 @@
 				}
 			});
 
+
 })(jQuery);
+
+// Динамическое изменение акцентного свечения при скролле
+const sections = document.querySelectorAll('section.wrapper');
+const body = document.querySelector('body');
+
+const observerOptions = {
+    threshold: 0.3 // Срабатывает, когда секция видна на 30%
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const sectionId = entry.target.id;
+            
+            // Логика смены стилей в зависимости от секции
+            if (sectionId === 'intro') {
+                body.style.boxShadow = "inset 0 0 100px rgba(2, 129, 255, 0.2)";
+            } else if (sectionId === 'one') {
+                body.style.boxShadow = "inset 0 0 100px rgba(219, 83, 170, 0.15)";
+            } else if (sectionId === 'two') {
+                body.style.boxShadow = "inset 0 0 100px rgba(1, 255, 255, 0.15)";
+            }
+            body.style.transition = "box-shadow 1s ease";
+        }
+    });
+}, observerOptions);
+
+sections.forEach(section => observer.observe(section));
