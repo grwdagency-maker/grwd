@@ -3908,16 +3908,67 @@ input, select, textarea {
 
 		}
 
-		/* GRWD Brand Colors Override */
-body { background: #0b1d33 !important; } /* Глубокий синий фон презентации */
-#sidebar { background: #081221 !important; }
-#sidebar nav a:after { background-image: linear-gradient(to right, #00e5ff, #007bff) !important; }
-h1.major:after { background-image: linear-gradient(to right, #00e5ff, #007bff) !important; }
-.wrapper.style1 { background-color: #0b1d33 !important; }
-.wrapper.style2 { background-color: #0d2542 !important; }
-.wrapper.style3 { background-color: #0b1d33 !important; }
-input[type="submit"].primary, input[type="reset"].primary, input[type="button"].primary, button.primary, .button.primary {
-    background-color: #00e5ff !important;
-    color: #081221 !important;
+/* --- GRWD 2026 BRANDING CORE --- */
+:root {
+    --color-pink: #DB53AA;
+    --color-cyan: #01FFFF;
+    --color-blue: #0281FF;
+    --bg-dark: #050a15; /* Глубокий космический черный */
+    --glass-bg: rgba(5, 10, 21, 0.7);
 }
-.icon.major { color: #00e5ff !important; }
+
+body { 
+    background-color: var(--bg-dark) !important; 
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Sidebar: Glassmorphism effect */
+#sidebar {
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(15px); /* Размытие фона за панелью */
+    border-right: 1px solid rgba(1, 255, 255, 0.1);
+}
+
+#sidebar nav a.active {
+    color: var(--color-cyan) !important;
+}
+
+#sidebar nav a.active:after {
+    background: linear-gradient(to bottom, var(--color-cyan), var(--color-blue)) !important;
+    width: 4px !important;
+    max-width: 4px !important;
+}
+
+/* Titles: Neon Glow */
+h1, h2, h3 { 
+    color: #ffffff !important;
+    text-shadow: 0 0 15px rgba(1, 255, 255, 0.3);
+}
+
+h1.major:after {
+    background-image: linear-gradient(to right, var(--color-pink), var(--color-blue)) !important;
+}
+
+/* Action Buttons */
+.button.primary {
+    background: linear-gradient(45deg, var(--color-pink), var(--color-blue)) !important;
+    border: none !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(219, 83, 170, 0.4);
+    transition: all 0.3s ease;
+}
+
+.button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(1, 255, 255, 0.5);
+    background: var(--color-cyan) !important;
+    color: var(--bg-dark) !important;
+}
+
+/* Icons */
+.icon.major {
+    background-color: transparent !important;
+    border: 2px solid var(--color-cyan) !important;
+    color: var(--color-cyan) !important;
+    box-shadow: inset 0 0 10px rgba(1, 255, 255, 0.2);
+}
