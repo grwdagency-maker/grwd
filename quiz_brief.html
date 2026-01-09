@@ -13,12 +13,13 @@
         <style>
             /* === QUIZ ENGINE STYLES === */
 
-            /* 1. LAYOUT ENGINE */
+/* 1. LAYOUT ENGINE (Updated for Alignment) */
             #wrapper {
                 display: flex;
                 flex-direction: column;
                 min-height: 100vh;
-                margin-left: 260px; /* Sidebar offset */
+                margin-left: 260px; /* Sidebar width */
+                width: calc(100% - 260px); /* Explicit width calculation */
             }
 
             .quiz-wrapper {
@@ -26,29 +27,25 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                align-items: center;
-                padding: 60px 20px;
+                align-items: center; /* Centers the box horizontally */
+                padding: 40px; /* Matches main page padding rhythm */
+                width: 100%;
             }
 
-            /* 2. CONTAINER DESIGN */
+            /* 2. CONTAINER DESIGN (Wider & Aligned) */
             .quiz-container {
                 background: rgba(10, 14, 20, 0.85);
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
                 border: 1px solid rgba(255, 255, 255, 0.08);
                 width: 100%;
-                max-width: 750px;
+                /* INCREASED WIDTH from 750px to 900px to match Main Page visual weight */
+                max-width: 900px; 
                 border-radius: 12px;
                 box-shadow: 0 30px 60px rgba(0,0,0,0.6);
                 position: relative;
                 overflow: hidden;
-                padding: 50px;
-            }
-
-            .quiz-container::before {
-                content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-                background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-                box-shadow: 0 0 15px var(--accent-cyan);
+                padding: 60px; /* More internal breathing room */
             }
 
             /* 3. PROGRESS BAR */
