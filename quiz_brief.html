@@ -13,7 +13,7 @@
         <style>
             /* === QUIZ ENGINE STYLES === */
 
-            /* 1. LAYOUT ENGINE (Flexbox Footer Fix) */
+            /* 1. LAYOUT ENGINE */
             #wrapper {
                 display: flex;
                 flex-direction: column;
@@ -32,12 +32,12 @@
 
             /* 2. CONTAINER DESIGN */
             .quiz-container {
-                background: rgba(10, 14, 20, 0.7);
+                background: rgba(10, 14, 20, 0.85); /* Чуть плотнее фон для читаемости */
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
                 border: 1px solid rgba(255, 255, 255, 0.08);
                 width: 100%;
-                max-width: 700px;
+                max-width: 750px; /* Чуть шире для длинных текстов */
                 border-radius: 12px;
                 box-shadow: 0 30px 60px rgba(0,0,0,0.6);
                 position: relative;
@@ -100,13 +100,13 @@
             .option {
                 background: rgba(255,255,255,0.02);
                 border: 1px solid rgba(255,255,255,0.08);
-                padding: 16px 20px;
+                padding: 18px 22px;
                 border-radius: 8px;
                 margin-bottom: 12px;
                 cursor: pointer;
                 transition: all 0.2s ease-out;
                 display: flex;
-                align-items: center;
+                align-items: flex-start; /* Выравнивание по верху для многострочных */
                 color: #ccc;
                 font-size: 15px;
                 line-height: 1.5;
@@ -124,12 +124,32 @@
                 box-shadow: 0 0 20px rgba(0, 240, 255, 0.05);
             }
 
+            /* Option Content Layout */
+            .opt-content {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+            }
+            .opt-title {
+                font-weight: 600;
+                color: #fff;
+                margin-bottom: 4px;
+            }
+            .opt-desc {
+                font-size: 13px;
+                color: #888;
+                line-height: 1.4;
+                font-weight: 300;
+            }
+            .option.selected .opt-desc { color: #aaa; }
+
             /* Indicators */
             .indicator {
                 width: 18px; height: 18px;
                 border: 2px solid #555;
                 border-radius: 50%;
                 margin-right: 15px;
+                margin-top: 3px; /* Align with title */
                 display: flex; align-items: center; justify-content: center;
                 flex-shrink: 0;
                 transition: 0.2s;
@@ -153,19 +173,12 @@
                 width: 100%;
                 outline: none;
                 transition: 0.3s;
-                margin-left: 10px;
+                margin-top: 5px;
             }
             .custom-input:focus { border-bottom-color: var(--accent-cyan); }
-            /* Standalone input option */
-            .input-only-option { cursor: default; }
-            .input-only-option:hover { transform: none; background: rgba(255,255,255,0.02); }
-
+            
             /* 6. NAVIGATION BUTTONS */
-            .nav-actions {
-                display: flex;
-                gap: 15px;
-                margin-top: 35px;
-            }
+            .nav-actions { display: flex; gap: 15px; margin-top: 35px; }
             
             .btn-action {
                 flex: 1;
@@ -182,7 +195,6 @@
                 font-size: 13px;
             }
             
-            /* Next Button Active State */
             #next-btn:not(:disabled) {
                 border-color: var(--accent-cyan);
                 color: var(--accent-cyan);
@@ -196,18 +208,14 @@
                 box-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
             }
 
-            /* Back Button */
             #back-btn {
-                flex: 0 0 100px; /* Фиксированная ширина */
+                flex: 0 0 100px;
                 border-color: #444;
                 color: #888;
                 cursor: pointer;
-                display: none; /* Скрыт на старте */
+                display: none;
             }
-            #back-btn:hover {
-                border-color: #666;
-                color: #fff;
-            }
+            #back-btn:hover { border-color: #666; color: #fff; }
 
             /* 7. RESULT SCREEN */
             .result-screen { text-align: center; display: none; padding: 20px; }
@@ -220,14 +228,13 @@
             }
             @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-            /* 8. FOOTER (FLEXBOX FIX) */
+            /* 8. FOOTER */
             #footer {
                 margin-top: auto;
                 width: 100%;
                 border-top: 1px solid var(--border-light);
                 padding: 40px 0;
                 background: transparent;
-                position: relative;
             }
             .footer-content {
                 display: flex;
@@ -269,7 +276,6 @@
 			<div id="wrapper">
 
                 <section class="quiz-wrapper">
-                    
                     <div class="quiz-container">
                         
                         <div class="quiz-body" id="quiz-block">
@@ -289,7 +295,7 @@
 
                         <div id="result-block" class="result-screen">
                             <div class="check-animation"><i class="fa-solid fa-circle-check"></i></div>
-                            <h2>Protocol Complete</h2>
+                            <h2>Audit Submitted</h2>
                             <p>Your strategic data has been securely logged.</p>
                             <p>Our engineering team is analyzing your inputs. You will receive a diagnostic roadmap via email within 24 hours.</p>
                             
@@ -299,9 +305,7 @@
                             
                             <div id="status" style="color:#555; margin-top:20px; font-size: 0.8em; font-family: monospace;">[Status: Encrypting & Sending...]</div>
                         </div>
-
                     </div>
-
                 </section>
 
                 <footer id="footer">
@@ -323,18 +327,18 @@
 
 <script>
     // ==========================================
-    // ⚙️ GRWD QUIZ ENGINE (BRANCHING LOGIC)
+    // ⚙️ GRWD QUIZ ENGINE (v2.0 Full Logic)
     // ==========================================
     const BOT_TOKEN = '8362006099:AAH-V7BaRvOVg3Ufiy0MBUpTPEGjTF7cmGA';
     const CHAT_ID = '1151941643';
 
     // State Management
     let currentQuestionId = "start";
-    let historyStack = []; // For Back Button
-    let userAnswers = {}; // Store ID: Answer
-    let currentBranch = null; // 'perf', 'brand', 'fract'
+    let historyStack = []; 
+    let userAnswers = {}; 
+    let currentBranch = null; 
 
-    // --- QUIZ DATA STRUCTURE ---
+    // --- QUIZ DATA ---
     const quizData = {
         // --- SCREEN 1: SEGMENTATION ---
         "start": {
@@ -345,9 +349,24 @@
             step: 1,
             totalSteps: 6,
             options: [
-                { text: "Performance Engine (Fix Funnels / Lead Gen)", next: "perf_q2", setBranch: "perf" },
-                { text: "Brand & Authority (Content & Socials)", next: "brand_q2", setBranch: "brand" },
-                { text: "Fractional Growth Partner (Strategy & Mgmt)", next: "fract_q2", setBranch: "fract" }
+                { 
+                    text: "Performance Engine", 
+                    desc: "I need immediate, high-volume results. Focus on fixing broken funnels, reducing CAC, and launching high-velocity paid media in complex niches.",
+                    next: "perf_q2", 
+                    setBranch: "perf" 
+                },
+                { 
+                    text: "Brand & Authority", 
+                    desc: "I need long-term credibility. Focus on positioning the founder/company as the definitive authority (Founder-Led Growth, Strategic SMM) to convert high-value demand.",
+                    next: "brand_q2", 
+                    setBranch: "brand" 
+                },
+                { 
+                    text: "Fractional Growth Partner", 
+                    desc: "I need C-level strategy. Focus on Unit Economics, GTM strategy, auditing teams, and building a predictable revenue engine without a full-time VP.",
+                    next: "fract_q2", 
+                    setBranch: "fract" 
+                }
             ]
         },
 
@@ -355,22 +374,22 @@
         // 🟥 BRANCH 1: PERFORMANCE ENGINE
         // ==========================================
         "perf_q2": {
-            screen: "Screen 2: Defining the Challenge",
-            q: "Which specific challenge within Performance Marketing is most critical?",
+            screen: "Defining the Performance Challenge",
+            q: "Which specific challenge or goal is most critical for your business today?",
             type: "checkbox",
             branch: "perf",
             step: 2,
             totalSteps: 6,
             next: "perf_q3",
             options: [
-                { text: "Launching Lead Gen from Scratch / Fixing Chaos" },
-                { text: "Regulated Ad-Ops & CAC Reduction" },
-                { text: "Turnkey Lead Generation Engineering" },
-                { text: "Infrastructure Audit & Setup (Data Transparency)" }
+                { text: "Launching Lead Gen from Scratch", desc: "We have no structured marketing or our efforts are chaotic. Need a complete system built." },
+                { text: "Regulated Ad-Ops & CAC Reduction", desc: "Campaigns are too expensive, burn out quickly, or struggle with policy restrictions." },
+                { text: "Turnkey Lead Generation Engineering", desc: "Full-funnel optimization—from landing page conversion to the first booked demo." },
+                { text: "Infrastructure Audit & Setup", desc: "Lack transparency. Can't trust data, broken tracking (GA4, GTM, CRM)." }
             ]
         },
         "perf_q3": {
-            screen: "Screen 3: Financials & Targets",
+            screen: "Financials & Targets",
             q: "What is the primary target segment for your product?",
             type: "radio",
             branch: "perf",
@@ -378,13 +397,13 @@
             totalSteps: 6,
             next: "perf_q4",
             options: [
-                { text: "B2B (Enterprise / B2B)" },
-                { text: "B2C (Consumer)" },
-                { text: "B2B2C (Hybrid)" }
+                { text: "B2B (Selling to other companies / Enterprise)" },
+                { text: "B2C (Selling to end consumers)" },
+                { text: "B2B2C (Hybrid Model)" }
             ]
         },
         "perf_q4": {
-            screen: "Screen 3: Financials & Targets",
+            screen: "Financials & Targets",
             q: "Which industry does your business primarily operate in?",
             type: "radio",
             branch: "perf",
@@ -398,8 +417,8 @@
             ]
         },
         "perf_q5": {
-            screen: "Screen 3: Financials & Targets",
-            q: "What is the target Lifetime Value (LTV) of your ideal customer?",
+            screen: "Financials & Targets",
+            q: "What is the approximate target Lifetime Value (LTV) of your ideal customer?",
             type: "input_mixed",
             branch: "perf",
             step: 3,
@@ -407,12 +426,12 @@
             next: "perf_q6",
             options: [
                 { text: "LTV Amount:", input: true, placeholder: "e.g. $5,000" },
-                { text: "Not yet defined / Need help calculation" }
+                { text: "Not yet defined / Need help with calculation" }
             ]
         },
         "perf_q6": {
-            screen: "Screen 3: Financials & Targets",
-            q: "What is your maximum acceptable CAC?",
+            screen: "Financials & Targets",
+            q: "What is your maximum acceptable Customer Acquisition Cost (Max CAC)?",
             type: "input_mixed",
             branch: "perf",
             step: 3,
@@ -420,11 +439,11 @@
             next: "perf_q7",
             options: [
                 { text: "Max CAC:", input: true, placeholder: "e.g. $500" },
-                { text: "Not yet defined / Need help calculation" }
+                { text: "Not yet defined / Need help with calculation" }
             ]
         },
         "perf_q7": {
-            screen: "Screen 3: Financials & Targets",
+            screen: "Financials & Targets",
             q: "What is your current monthly budget allocated for Performance Ad Spend?",
             type: "radio",
             branch: "perf",
@@ -432,15 +451,15 @@
             totalSteps: 6,
             next: "perf_q8",
             options: [
-                { text: "Less than $5,000" },
-                { text: "$5,000 - $15,000" },
-                { text: "$15,000 - $50,000" },
-                { text: "Over $50,000", input: true }
+                { text: "Less than $5,000 USD" },
+                { text: "$5,000 - $15,000 USD" },
+                { text: "$15,000 - $50,000 USD" },
+                { text: "Over $50,000 USD", input: true }
             ]
         },
         "perf_q8": {
-            screen: "Screen 4: Infrastructure",
-            q: "Please provide your product website URL for preliminary audit:",
+            screen: "Infrastructure & Product",
+            q: "Please provide your product or company website URL for a preliminary audit:",
             type: "text_only",
             branch: "perf",
             step: 4,
@@ -449,34 +468,38 @@
             placeholder: "https://yourwebsite.com"
         },
         "perf_q9": {
-            screen: "Screen 4: Infrastructure",
-            q: "How confident are you in your Product-Market Fit (PMF)?",
+            screen: "Infrastructure & Product",
+            q: "How confident are you in your Product-Market Fit (PMF) readiness for scaling?",
             type: "radio",
             branch: "perf",
             step: 4,
             totalSteps: 6,
             next: "perf_q10",
             options: [
-                { text: "Proven and Ready (Steady sales, ready to scale)" },
-                { text: "Early Proof (Initial sales, needs optimization)" },
-                { text: "Testing Phase (Still searching)" }
+                { text: "Proven and Ready", desc: "Steady stream of paying clients, ready to push the gas." },
+                { text: "Early Proof", desc: "Initial paying customers, but funnel needs optimization." },
+                { text: "Testing Phase", desc: "Just starting out or still searching for initial sales." }
             ]
         },
         "perf_q10": {
-            screen: "Screen 4: Infrastructure",
-            q: "Which Paid Media channels are you using or planning to use?",
+            screen: "Infrastructure & Product",
+            q: "Which Paid Media channels are you currently using or planning to use?",
             type: "checkbox",
             branch: "perf",
             step: 4,
             totalSteps: 6,
             next: "perf_q11",
             options: [
-                { text: "Google Ads" }, { text: "Meta Ads" }, { text: "LinkedIn Ads" },
-                { text: "TikTok Ads" }, { text: "None (From Scratch)" }, { text: "Other", input: true }
+                { text: "Google Ads (Search, Display, PMax)" },
+                { text: "Meta Ads (FB, Instagram)" },
+                { text: "LinkedIn Ads" },
+                { text: "TikTok Ads" },
+                { text: "None (Planning launch from scratch)" },
+                { text: "Other", input: true }
             ]
         },
         "perf_q11": {
-            screen: "Screen 4: Infrastructure",
+            screen: "Infrastructure & Product",
             q: "How well-setup are your analytics and tracking systems?",
             type: "radio",
             branch: "perf",
@@ -484,26 +507,26 @@
             totalSteps: 6,
             next: "perf_q12",
             options: [
-                { text: "Total Transparency (GA4/CRM integrated)" },
-                { text: "Needs Fixing (Broken funnels)" },
-                { text: "Non-existent" }
+                { text: "Total Transparency", desc: "Integrated (GA4/GTM/CRM) and reliably tracking MQLs." },
+                { text: "Needs Fixing", desc: "Have tools, but likely broken funnels and tracking issues." },
+                { text: "Non-existent", desc: "No centralized or reliable tracking in place." }
             ]
         },
         "perf_q12": {
-            screen: "Screen 5: Identifying the Leak",
-            q: "What is the single biggest 'budget leak' right now?",
+            screen: "Identifying the Main Leak",
+            q: "What is the single biggest 'budget leak' in your operations right now?",
             type: "radio",
             branch: "perf",
             step: 5,
             totalSteps: 6,
             next: "contact_name",
             options: [
-                { text: "Lack of Marketing Function" },
-                { text: "High CAC" },
-                { text: "Low Lead Quality" },
-                { text: "Ineffective Execution" },
-                { text: "Lack of Volume (Can't Scale)" },
-                { text: "Lack of Transparency (Data Trust)" }
+                { text: "Lack of a Marketing Function", desc: "No structured marketing. Need a predictable system built." },
+                { text: "High CAC", desc: "Cost of acquiring a customer is unacceptably high." },
+                { text: "Low Lead Quality", desc: "Lots of leads, but they fail to convert into MQLs." },
+                { text: "Ineffective Execution", desc: "Spend money, but results are chaotic, creatives burn out." },
+                { text: "Lack of Volume", desc: "Model works, but cannot scale to desired volume." },
+                { text: "Lack of Transparency", desc: "Don't trust the data. Don't know where money is lost." }
             ]
         },
 
@@ -511,21 +534,21 @@
         // 🟦 BRANCH 2: BRAND & AUTHORITY
         // ==========================================
         "brand_q2": {
-            screen: "Screen 2: Defining Focus",
-            q: "Which specific area is your primary focus for Brand & Authority?",
+            screen: "Defining the Focus",
+            q: "Which specific area is your primary focus for building Brand & Authority?",
             type: "checkbox",
             branch: "brand",
             step: 2,
             totalSteps: 6,
             next: "brand_q3",
             options: [
-                { text: "Founder-Led Growth (FLG)" },
-                { text: "Strategic Corporate Brand / SMM" },
-                { text: "High-Conversion Copywriting & Assets" }
+                { text: "Founder-Led Growth (FLG)", desc: "Position founder as industry leader to drive demand." },
+                { text: "Strategic Corporate SMM", desc: "Systematic management of company channels to build trust." },
+                { text: "High-Conversion Copywriting", desc: "Package expertise into assets (White Papers, emails) that drive pipeline." }
             ]
         },
         "brand_q3": {
-            screen: "Screen 3: Strategic Vision",
+            screen: "Strategic Vision",
             q: "What is the primary business goal of this initiative?",
             type: "radio",
             branch: "brand",
@@ -533,14 +556,14 @@
             totalSteps: 6,
             next: "brand_q4",
             options: [
-                { text: "Direct Demand Generation" },
-                { text: "Building Trust & Credibility" },
-                { text: "Establishing Thought Leadership" },
-                { text: "Improving Recruiting" }
+                { text: "Direct Demand Generation", desc: "Content should directly lead to MQLs/Demos." },
+                { text: "Building Trust & Credibility", desc: "Softening the ground for Sales and reducing friction." },
+                { text: "Establishing Thought Leadership", desc: "Becoming the go-to authority in our niche." },
+                { text: "Improving Recruiting / Talent Acquisition" }
             ]
         },
         "brand_q4": {
-            screen: "Screen 3: Strategic Vision",
+            screen: "Strategic Vision",
             q: "Which industry does your business primarily operate in?",
             type: "radio",
             branch: "brand",
@@ -554,7 +577,7 @@
             ]
         },
         "brand_q5": {
-            screen: "Screen 3: Strategic Vision",
+            screen: "Strategic Vision",
             q: "Who is the core target audience?",
             type: "radio",
             branch: "brand",
@@ -562,7 +585,7 @@
             totalSteps: 6,
             next: "brand_q6",
             options: [
-                { text: "C-Level Executives" },
+                { text: "C-Level Executives (CEO, CTO, COO)" },
                 { text: "Technical Decision Makers" },
                 { text: "VPs / Directors of Sales/Marketing" },
                 { text: "Investors / Analysts" },
@@ -570,17 +593,17 @@
             ]
         },
         "brand_q6": {
-            screen: "Screen 3: Strategic Vision",
-            q: "Competitors benchmarking (Optional):",
+            screen: "Strategic Vision",
+            q: "Which competitors are currently doing an outstanding job? (Optional)",
             type: "text_only",
             branch: "brand",
             step: 3,
             totalSteps: 6,
             next: "brand_q7",
-            placeholder: "Competitor URLs/Names"
+            placeholder: "Competitor URL(s) / Name(s)"
         },
         "brand_q7": {
-            screen: "Screen 3: Strategic Vision",
+            screen: "Strategic Vision",
             q: "Your website URL for messaging context:",
             type: "text_only",
             branch: "brand",
@@ -590,36 +613,36 @@
             placeholder: "https://yourwebsite.com"
         },
         "brand_q8": {
-            screen: "Screen 4: Readiness",
-            q: "Founder's time commitment for content creation?",
+            screen: "Content Readiness",
+            q: "What is the founder/executive's time commitment for content creation?",
             type: "radio",
             branch: "brand",
             step: 4,
             totalSteps: 6,
             next: "brand_q9",
             options: [
-                { text: "High Commitment (3-5 hrs/week)" },
-                { text: "Low Commitment (High-level ideas only)" },
-                { text: "No Commitment (Corporate focus)" }
+                { text: "High Commitment", desc: "Ready to be filmed/write (3-5 hours per week)." },
+                { text: "Low Commitment", desc: "Can provide high-level ideas (30 min/week), rest is ghostwritten." },
+                { text: "No Commitment", desc: "Focus entirely on the corporate brand." }
             ]
         },
         "brand_q9": {
-            screen: "Screen 4: Readiness",
-            q: "Current status of high-value Brand assets (Case Studies, etc.)?",
+            screen: "Content Readiness",
+            q: "Current status of high-value Brand/Authority content assets?",
             type: "radio",
             branch: "brand",
             step: 4,
             totalSteps: 6,
             next: "brand_q10",
             options: [
-                { text: "Well-Developed" },
-                { text: "Needs Improvement" },
-                { text: "Starting from Scratch" }
+                { text: "Well-Developed", desc: "Have strong, clear, recent case studies/white papers." },
+                { text: "Needs Improvement", desc: "Have basic materials, but need expert packaging." },
+                { text: "Starting from Scratch", desc: "Minimal or no high-quality content assets." }
             ]
         },
         "brand_q10": {
-            screen: "Screen 5: Investment",
-            q: "Current resource allocation for Brand Building?",
+            screen: "Investment",
+            q: "How much resource is currently allocated to Brand Building?",
             type: "radio",
             branch: "brand",
             step: 5,
@@ -632,54 +655,54 @@
             ]
         },
         "brand_q11": {
-            screen: "Screen 5: Investment",
+            screen: "Investment",
             q: "Link to profile(s) you wish to scale (Optional):",
             type: "text_only",
             branch: "brand",
             step: 5,
             totalSteps: 6,
             next: "contact_name",
-            placeholder: "LinkedIn / Social URL"
+            placeholder: "LinkedIn Profile URL..."
         },
 
         // ==========================================
         // 🟪 BRANCH 3: FRACTIONAL PARTNER
         // ==========================================
         "fract_q2": {
-            screen: "Screen 2: Strategic Challenge",
-            q: "Which strategic problem needs solving first?",
+            screen: "Defining the Strategic Challenge",
+            q: "Which strategic problem are you hiring a Partner to solve first?",
             type: "checkbox",
             branch: "fract",
             step: 2,
             totalSteps: 6,
             next: "fract_q3",
             options: [
-                { text: "Building Marketing from Zero" },
-                { text: "GTM Strategy & Expansion" },
-                { text: "Unit Economics & Profitability" },
-                { text: "Pipeline Engineering & Sales Alignment" },
-                { text: "Team Audit & Architecture" }
+                { text: "Building Marketing from Zero", desc: "No structured marketing, need scalable revenue system." },
+                { text: "GTM Strategy & Expansion", desc: "Roadmap for new product launch or new geography." },
+                { text: "Unit Economics & Profitability", desc: "Stop bleeding budget, fix CAC/LTV." },
+                { text: "Pipeline Engineering", desc: "Align Marketing & Sales metrics." },
+                { text: "Team Audit & Architecture", desc: "Audit internal team/agencies, hiring help." }
             ]
         },
         "fract_q3": {
-            screen: "Screen 3: Business Maturity",
-            q: "What is your company's approximate ARR?",
+            screen: "Business Maturity",
+            q: "What is your company's approximate current ARR?",
             type: "radio",
             branch: "fract",
             step: 3,
             totalSteps: 6,
             next: "fract_q4",
             options: [
-                { text: "Pre-Revenue / <$100k" },
-                { text: "$100k - $500k" },
-                { text: "$500k - $2M" },
-                { text: "$2M - $5M+" },
-                { text: "$5M+", input: true }
+                { text: "Pre-Revenue / Less than $100k ARR" },
+                { text: "$100k - $500k ARR" },
+                { text: "$500k - $2M ARR" },
+                { text: "$2M - $5M+ ARR" },
+                { text: "$5M+ ARR", input: true }
             ]
         },
         "fract_q4": {
-            screen: "Screen 3: Business Maturity",
-            q: "Which industry does your business operate in?",
+            screen: "Business Maturity",
+            q: "Which industry does your business primarily operate in?",
             type: "radio",
             branch: "fract",
             step: 3,
@@ -692,36 +715,36 @@
             ]
         },
         "fract_q5": {
-            screen: "Screen 3: Business Maturity",
-            q: "Primary objective for next 12 months?",
+            screen: "Business Maturity",
+            q: "Primary business objective for the next 12 months?",
             type: "radio",
             branch: "fract",
             step: 3,
             totalSteps: 6,
             next: "fract_q6",
             options: [
-                { text: "Secure Funding (Seed/Series A)" },
-                { text: "Achieve Product-Market Fit" },
-                { text: "Hit Revenue Target ($X ARR)" },
-                { text: "New Market Expansion" }
+                { text: "Secure next funding round (Seed/Series A)" },
+                { text: "Achieve Product-Market Fit (PMF)" },
+                { text: "Hit a specific revenue target" },
+                { text: "Enter and secure traction in new market" }
             ]
         },
         "fract_q6": {
-            screen: "Screen 3: Business Maturity",
-            q: "Why Fractional Partner over full-time hire?",
+            screen: "Business Maturity",
+            q: "Why choose a Fractional Partner over a full-time hire?",
             type: "radio",
             branch: "fract",
             step: 3,
             totalSteps: 6,
             next: "fract_q7",
             options: [
-                { text: "Cost Efficiency" },
-                { text: "Speed & Expertise" },
-                { text: "Temporary Need / Fix" }
+                { text: "Cost Efficiency", desc: "Full-time C-level is too expensive." },
+                { text: "Speed & Expertise", desc: "Need expert execution immediately." },
+                { text: "Temporary Need", desc: "Fix specific problem before hiring full-time." }
             ]
         },
         "fract_q7": {
-            screen: "Screen 3: Business Maturity",
+            screen: "Business Maturity",
             q: "Website URL for strategic context:",
             type: "text_only",
             branch: "fract",
@@ -731,21 +754,21 @@
             placeholder: "https://yourwebsite.com"
         },
         "fract_q8": {
-            screen: "Screen 4: Data Rigor",
-            q: "Confidence in data quality & transparency?",
+            screen: "Infrastructure & Data",
+            q: "Confidence in current data quality and transparency?",
             type: "radio",
             branch: "fract",
             step: 4,
             totalSteps: 6,
             next: "fract_q9",
             options: [
-                { text: "High Confidence (Total Transparency)" },
-                { text: "Moderate (Known Gaps)" },
-                { text: "Low Confidence (Chaotic)" }
+                { text: "High Confidence", desc: "Total Transparency. We rely on data for decisions." },
+                { text: "Moderate Confidence", desc: "We use it, but know there are gaps." },
+                { text: "Low Confidence", desc: "Reporting is chaotic or manual." }
             ]
         },
         "fract_q9": {
-            screen: "Screen 4: Data Rigor",
+            screen: "Infrastructure & Data",
             q: "Primary tracking system?",
             type: "radio",
             branch: "fract",
@@ -753,14 +776,14 @@
             totalSteps: 6,
             next: "fract_q10",
             options: [
-                { text: "CRM (HubSpot/SF) + BI" },
-                { text: "CRM + Spreadsheets" },
-                { text: "Spreadsheets / Manual" },
-                { text: "No robust system" }
+                { text: "Centralized CRM (HubSpot/SF) + BI" },
+                { text: "CRM + Spreadsheets (Manual)" },
+                { text: "Spreadsheets / Manual Systems" },
+                { text: "No robust system yet" }
             ]
         },
         "fract_q10": {
-            screen: "Screen 4: Data Rigor",
+            screen: "Infrastructure & Data",
             q: "Current Growth Team structure?",
             type: "radio",
             branch: "fract",
@@ -770,12 +793,12 @@
             options: [
                 { text: "Dedicated In-house Team" },
                 { text: "Hybrid (Internal + Agency)" },
-                { text: "Agencies / Freelancers" },
-                { text: "None (Founder only)" }
+                { text: "External agencies/freelancers" },
+                { text: "None (Founder handles growth)" }
             ]
         },
         "fract_q11": {
-            screen: "Screen 5: Expectations",
+            screen: "Partnership Expectations",
             q: "When do you need to start?",
             type: "radio",
             branch: "fract",
@@ -784,11 +807,11 @@
             next: "fract_q12",
             options: [
                 { text: "Immediately (2-4 weeks)" },
-                { text: "1-3 months" }
+                { text: "Within 1-3 months" }
             ]
         },
         "fract_q12": {
-            screen: "Screen 5: Expectations",
+            screen: "Partnership Expectations",
             q: "Expected minimum duration?",
             type: "radio",
             branch: "fract",
@@ -796,9 +819,9 @@
             totalSteps: 6,
             next: "contact_name",
             options: [
-                { text: "3 months (Sprint)" },
-                { text: "6 months (Execution)" },
-                { text: "9-12 months (Architecture)" }
+                { text: "3 months (Roadmap / Fix issues)" },
+                { text: "6 months (Execution Phase)" },
+                { text: "9-12 months (Full Architecture)" }
             ]
         },
 
@@ -913,20 +936,28 @@
                 const div = document.createElement('div');
                 div.className = 'option';
                 
-                // HTML Content
+                // HTML Content Structure
                 let html = `<div class="indicator"></div>`;
-                if(opt.text) html += `<span>${opt.text}</span>`;
-
-                // If option has input inside (e.g. "Other: ___")
+                html += `<div class="opt-content">`;
+                
+                // Title
+                if(opt.text) html += `<div class="opt-title">${opt.text}</div>`;
+                
+                // Description (NEW LOGIC)
+                if(opt.desc) html += `<div class="opt-desc">${opt.desc}</div>`;
+                
+                // Input inside option
                 if(opt.input) {
                     html += `<input type="text" class="custom-input" placeholder="${opt.placeholder || 'Specify...'}" id="opt-input-${idx}">`;
                 }
+                
+                html += `</div>`; // end opt-content
 
                 div.innerHTML = html;
                 
                 // Click Event
                 div.onclick = (e) => {
-                    if (e.target.tagName === 'INPUT') return; // Don't trigger if clicking text input
+                    if (e.target.tagName === 'INPUT') return; 
                     handleSelection(div, opt, data.type);
                     if (opt.input) setTimeout(() => document.getElementById(`opt-input-${idx}`).focus(), 50);
                 };
@@ -935,7 +966,6 @@
                 if (opt.input) {
                     const inputEl = div.querySelector('input');
                     inputEl.addEventListener('input', () => {
-                        // Auto-select parent option if typing
                         if (!div.classList.contains('selected')) handleSelection(div, opt, data.type);
                         validateStep();
                     });
@@ -1029,26 +1059,22 @@
              answerText.push(userAnswers[currentQuestionId]);
         } else {
             document.querySelectorAll('.option.selected').forEach(el => {
-                let text = el.innerText;
+                let text = el.querySelector('.opt-title') ? el.querySelector('.opt-title').innerText : el.innerText;
                 const inp = el.querySelector('input');
                 if (inp) text += ": " + inp.value;
                 
-                // Check if this option changes the branch (Q1)
-                const optData = data.options.find(o => el.innerText.includes(o.text));
+                // Branch Logic
+                const optData = data.options.find(o => text.includes(o.text));
                 if (optData && optData.setBranch) currentBranch = optData.setBranch;
-                if (optData && optData.next) nextId = optData.next; // Logic override
+                if (optData && optData.next) nextId = optData.next; 
 
                 answerText.push(text);
             });
         }
 
-        // Save Answer
         userAnswers[currentQuestionId] = answerText.join(' | ');
-        
-        // Push History
         historyStack.push(currentQuestionId);
 
-        // Move
         if (nextId === "FINISH") {
             finishQuiz();
         } else {
@@ -1061,8 +1087,6 @@
         if (historyStack.length === 0) return;
         currentQuestionId = historyStack.pop();
         renderQuestion();
-        // Note: Restore selections logic is complex, simple re-render clears visual selection but keeps data in userAnswers object.
-        // For 'text_only' it restores. For options, user re-selects (simplification for code size).
     };
 
     // --- FINISH & SEND ---
@@ -1075,7 +1099,6 @@
         msg += `➖➖➖➖➖➖➖\n`;
         msg += `🏷 <b>Branch:</b> ${currentBranch ? currentBranch.toUpperCase() : 'ROOT'}\n\n`;
 
-        // Iterate through history to preserve order
         historyStack.forEach(qid => {
             const q = quizData[qid];
             const ans = userAnswers[qid];
@@ -1083,9 +1106,6 @@
             msg += `❓ ${q.q}\n`;
             msg += `✅ <i>${ans}</i>\n\n`;
         });
-
-        // Add final step answers (Contact info)
-        // (Since contact info were sequential steps, they are already in historyStack)
 
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: "POST",
