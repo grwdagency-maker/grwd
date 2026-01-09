@@ -13,18 +13,26 @@
         <style>
             /* === QUIZ ENGINE STYLES === */
 
-            /* 1. LAYOUT ENGINE (Fixing the "Shift Right" Bug) */
+/* 1. LAYOUT ENGINE (Fixing Horizontal Scrollbar) */
+            html, body {
+                overflow-x: hidden; /* Жестко запрещаем гориз. скролл */
+                width: 100%;
+            }
+
             #wrapper {
                 display: flex;
                 flex-direction: column;
                 min-height: 100vh;
                 
-                /* ВАЖНО: Сбрасываем стандартные отступы шаблона Hyperspace */
+                /* Сбрасываем стили шаблона */
                 padding: 0 !important; 
                 
-                /* Задаем свой жесткий отступ под сайдбар */
+                /* Сайдбар */
                 margin-left: 260px !important;
-                width: auto !important; /* Занимает все оставшееся место */
+                
+                /* ГЛАВНОЕ ИСПРАВЛЕНИЕ: */
+                /* Ширина = Весь экран минус Сайдбар. Это уберет вылезание вправо */
+                width: calc(100% - 260px) !important; 
                 position: relative;
             }
 
@@ -34,8 +42,17 @@
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                padding: 60px 40px; /* Отступы внутри рабочей области */
+                padding: 60px 20px; /* Уменьшил боковые отступы, чтобы на моб. не жало */
                 width: 100%;
+                box-sizing: border-box; /* Гарантирует, что padding не расширяет блок */
+            }
+            
+            /* Mobile adjustment override */
+            @media screen and (max-width: 900px) {
+                #wrapper { 
+                    margin-left: 0 !important; 
+                    width: 100% !important; 
+                }
             }
 
             /* 2. CONTAINER DESIGN */
