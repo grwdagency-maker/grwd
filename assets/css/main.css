@@ -413,3 +413,33 @@ ul { list-style: none; }
     .icp-filter { justify-content: flex-start; }
 }
 
+
+/* --- TEAM LEADS IN CARDS --- */
+.card-lead {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.lead-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #666;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+}
+
+.lead-name {
+    font-size: 14px;
+    color: #fff;
+    font-weight: 700;
+    font-family: var(--font-head);
+    transition: color 0.3s;
+}
+
+/* Эффект при наведении на карточку: имя подсвечивается */
+.bento-card:hover .lead-name {
+    color: var(--accent-cyan);
+}
