@@ -697,3 +697,66 @@ body:hover::before { opacity: 1; }
 @media screen and (max-width: 900px) {
     .copyright-block { text-align: center; }
 }
+
+/* --- MOBILE HEADER & MENU SYSTEM --- */
+
+/* 1. По умолчанию скрываем мобильную шапку на ПК */
+#mobile-header {
+    display: none;
+}
+
+/* 2. Стили только для мобильных (меньше 900px) */
+@media screen and (max-width: 900px) {
+    
+    /* Показываем шапку */
+    #mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 60px;
+        background: rgba(5, 5, 5, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        z-index: 2000; /* Очень высокий слой, поверх всего */
+        padding: 0 20px;
+    }
+
+    /* Брендинг в шапке */
+    .mh-brand { display: flex; align-items: center; gap: 10px; }
+    .mh-brand img { height: 24px; width: auto; }
+    .mh-brand span { font-family: 'Outfit', sans-serif; font-weight: 800; color: #fff; letter-spacing: 0.1em; font-size: 16px; }
+
+    /* Кнопка меню */
+    #mobile-menu-btn {
+        background: transparent; border: none; color: #fff; font-size: 20px; cursor: pointer;
+    }
+
+    /* 3. Изменяем поведение САЙДБАРА на мобильных */
+    #sidebar {
+        display: flex !important; /* Принудительно включаем (раньше было none) */
+        transform: translateX(-100%); /* Прячем за левый край экрана */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 3000; /* Поверх даже мобильной шапки */
+        width: 80%; /* Занимает 80% экрана */
+        max-width: 300px;
+        box-shadow: 10px 0 50px rgba(0,0,0,0.8);
+        background: #080808; /* Плотный фон */
+    }
+
+    /* Класс, который JS добавит при клике */
+    #sidebar.active {
+        transform: translateX(0); /* Выезжает на экран */
+    }
+
+    /* 4. Сдвигаем контент вниз, чтобы не прятался под шапкой */
+    #wrapper {
+        padding-top: 60px !important; 
+        margin-left: 0 !important;
+    }
+    
+    /* Фикс для Квиза */
+    .quiz-container {
+        margin-top: 20px;
+    }
+}
