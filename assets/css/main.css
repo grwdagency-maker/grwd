@@ -668,3 +668,32 @@ body:hover::before { opacity: 1; }
     box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
 }
 
+
+/* --- FOOTER LINKS --- */
+.copyright-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+.footer-links {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.footer-links a {
+    color: #666;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.footer-links a:hover {
+    color: var(--accent-cyan);
+}
+.separator {
+    color: #444;
+    margin: 0 5px;
+}
+
+@media screen and (max-width: 900px) {
+    .copyright-block { text-align: center; }
+}
