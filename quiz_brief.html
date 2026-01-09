@@ -11,211 +11,161 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
         
         <style>
-            /* === QUIZ SPECIFIC STYLES (Dark Mode Integration) === */
-            
-            /* Override Wrapper for centering */
-            .quiz-wrapper {
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                padding: 40px 20px;
-            }
+/* === QUIZ SPECIFIC STYLES (FULL SET) === */
 
-            .quiz-container {
-                background: rgba(10, 14, 20, 0.6); /* Glass Dark */
-                backdrop-filter: blur(15px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                width: 100%;
-                max-width: 650px;
-                border-radius: 12px;
-                box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-                position: relative;
-                overflow: hidden;
-                padding: 40px;
-            }
+        /* 1. LAYOUT STRUCTURE (Fixing the Footer) */
+        #wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* margin-left: 260px; — этот отступ уже есть в main.css для десктопа */
+        }
 
-            /* Header Line */
-            .quiz-container::before {
-                content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-                background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-            }
+        /* Обертка квиза занимает всё свободное место между шапкой и футером */
+        .quiz-wrapper {
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px; /* Отступы сверху/снизу, чтобы было просторно */
+        }
 
-            /* Progress Bar */
-            .progress-container {
-                width: 100%;
-                background: rgba(255,255,255,0.05);
-                height: 4px;
-                border-radius: 2px;
-                margin-bottom: 30px;
-                overflow: hidden;
-            }
-            .progress-fill {
-                height: 100%;
-                background: var(--accent-cyan);
-                width: 0%;
-                transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-                box-shadow: 0 0 10px var(--accent-cyan);
-            }
+        /* 2. QUIZ CONTAINER (Glassmorphism / Terminal Look) */
+        .quiz-container {
+            background: rgba(10, 14, 20, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 650px;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            padding: 40px;
+        }
 
-            /* Typography */
-            .section-label {
-                font-family: 'Outfit', sans-serif;
-                font-size: 12px;
-                color: var(--accent-cyan);
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
-                margin-bottom: 10px;
-                display: block;
-            }
-            h2#question {
-                font-family: 'Outfit', sans-serif;
-                color: #fff;
-                font-size: 24px;
-                margin-bottom: 30px;
-                line-height: 1.3;
-            }
-            .hint {
-                color: #888; font-size: 14px; display: block; margin-top: -20px; margin-bottom: 25px;
-            }
+        /* Декоративная неоновая линия сверху */
+        .quiz-container::before {
+            content: ''; 
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+        }
 
-            /* Options (Buttons) */
-            .option {
-                background: rgba(255,255,255,0.03);
-                border: 1px solid rgba(255,255,255,0.1);
-                padding: 15px 20px;
-                border-radius: 6px;
-                margin-bottom: 12px;
-                cursor: pointer;
-                transition: all 0.2s;
-                display: flex;
-                align-items: center;
-                color: #ccc;
-                font-size: 15px;
-            }
-            .option:hover {
-                background: rgba(255,255,255,0.07);
-                border-color: rgba(255,255,255,0.3);
-                color: #fff;
-                transform: translateX(5px);
-            }
-            .option.selected {
-                background: rgba(0, 240, 255, 0.1);
-                border-color: var(--accent-cyan);
-                color: #fff;
-                box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
-            }
+        /* 3. PROGRESS BAR */
+        .progress-container {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            height: 4px;
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-cyan);
+            width: 0%;
+            transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
 
-            /* Custom Radio Indicator */
-            .indicator {
-                width: 18px; height: 18px;
-                border: 2px solid #555;
-                border-radius: 50%;
-                margin-right: 15px;
-                display: flex; align-items: center; justify-content: center;
-                flex-shrink: 0;
-            }
-            .multiple .indicator { border-radius: 3px; } /* Square for checkboxes */
-            
-            .option.selected .indicator {
-                border-color: var(--accent-cyan);
-                background: var(--accent-cyan);
-                box-shadow: 0 0 10px var(--accent-cyan);
-            }
+        /* 4. TYPOGRAPHY */
+        .section-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+            display: block;
+            opacity: 0.8;
+        }
+        h2#question {
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        .hint {
+            color: #888;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
 
-            /* Inputs */
-            .custom-input {
-                background: transparent;
-                border: none;
-                border-bottom: 1px solid #555;
-                color: #fff;
-                font-family: 'Inter', sans-serif;
-                font-size: 15px;
-                padding: 5px 0;
-                width: 100%;
-                outline: none;
-                transition: 0.3s;
-            }
-            .custom-input:focus {
-                border-bottom-color: var(--accent-cyan);
-            }
-            .custom-input.error { border-bottom-color: var(--alert-red); }
-            .error-msg { color: var(--alert-red); font-size: 12px; margin-top: 5px; display: none; }
-            .show-error .error-msg { display: block; }
+        /* 5. OPTIONS (Buttons & Inputs) */
+        .option {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            color: #ccc;
+            font-size: 15px;
+        }
 
-            /* Navigation Button */
-            .btn-action {
-                margin-top: 30px;
-                width: 100%;
-                background: transparent;
-                border: 1px solid #444;
-                color: #666;
-                padding: 15px;
-                text-transform: uppercase;
-                letter-spacing: 0.2em;
-                font-weight: 700;
-                cursor: not-allowed;
-                transition: 0.3s;
-                border-radius: 4px;
-            }
-            .btn-action:not(:disabled) {
-                border-color: var(--accent-cyan);
-                color: var(--accent-cyan);
-                background: rgba(0, 240, 255, 0.05);
-                cursor: pointer;
-                box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
-            }
-            .btn-action:not(:disabled):hover {
-                background: var(--accent-cyan);
-                color: #000;
-                box-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
-            }
+        .option:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(255,255,255,0.3);
+            color: #fff;
+            transform: translateX(5px);
+        }
 
-            /* Success Screen */
-            .result-screen { text-align: center; display: none; padding: 20px; }
-            .result-screen h2 { color: #fff; font-size: 32px; margin-bottom: 10px; }
-            .result-screen p { color: #aaa; margin-bottom: 20px; font-size: 16px; }
-            .check-animation {
-                font-size: 50px; color: var(--accent-cyan); margin-bottom: 20px;
-                animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            }
-            @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .option.selected {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: var(--accent-cyan);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+        }
 
-            @media screen and (max-width: 768px) {
-                .quiz-container { padding: 25px; }
-                h2#question { font-size: 20px; }
-            }
+        /* Custom Radio/Checkbox Indicator */
+        .indicator {
+            width: 18px; height: 18px;
+            border: 2px solid #555;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+        .multiple .indicator { border-radius: 3px; } /* Square for checkboxes */
 
-			#footer {
-    position: fixed; /* Фиксируем внизу экрана */
-    bottom: 0;
-    left: 260px; /* Отступ слева (ширина сайдбара) */
-    width: calc(100% - 260px); /* Занимаем оставшуюся ширину */
-    padding: 20px;
-    background: transparent; /* Убираем фон, чтобы он сливался */
-    border: none; /* Убираем рамку, она здесь лишняя */
-    z-index: 10; /* Поверх декораций */
-    pointer-events: none; /* Чтобы текст не мешал кликам, если наедет на что-то */
-}
+        .option.selected .indicator {
+            border-color: var(--accent-cyan);
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
 
-.footer-content {
-    opacity: 0.4; /* Делаем текст приглушенным "техническим" */
-    font-family: 'Inter', monospace; /* Моноширинный стиль для эстетики */
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
+        /* Text Inputs inside options */
+        .custom-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #555;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            padding: 5px 0;
+            width: 100%;
+            outline: none;
+            transition: 0.3s;
+        }
+        .custom-input:focus {
+            border-bottom-color: var(--accent-cyan);
+        }
+        .custom-input.error { border-bottom-color: var(--alert-red); }
+        .error-msg { color: var(--alert-red); font-size: 12px; margin-top: 5px; display: none; }
+        .show-error .error-msg { display: block; }
 
-@media screen and (max-width: 900px) {
-    #footer {
-        position: relative; /* На мобилках возвращаем в поток */
-        left: 0;
-        width: 100%;
-        padding-bottom: 40px;
-        opacity: 0.5;
-    }
-}
+        /* 6. ACTION BUTTONS (Next / Submit) */
+        .btn-action {
+            margin-top: 30px;
         </style>
 	</head>
 	<body class="is-preload">
