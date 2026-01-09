@@ -32,12 +32,12 @@
 
             /* 2. CONTAINER DESIGN */
             .quiz-container {
-                background: rgba(10, 14, 20, 0.85); /* Чуть плотнее фон для читаемости */
+                background: rgba(10, 14, 20, 0.85);
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
                 border: 1px solid rgba(255, 255, 255, 0.08);
                 width: 100%;
-                max-width: 750px; /* Чуть шире для длинных текстов */
+                max-width: 750px;
                 border-radius: 12px;
                 box-shadow: 0 30px 60px rgba(0,0,0,0.6);
                 position: relative;
@@ -106,7 +106,7 @@
                 cursor: pointer;
                 transition: all 0.2s ease-out;
                 display: flex;
-                align-items: flex-start; /* Выравнивание по верху для многострочных */
+                align-items: flex-start;
                 color: #ccc;
                 font-size: 15px;
                 line-height: 1.5;
@@ -149,7 +149,7 @@
                 border: 2px solid #555;
                 border-radius: 50%;
                 margin-right: 15px;
-                margin-top: 3px; /* Align with title */
+                margin-top: 3px; 
                 display: flex; align-items: center; justify-content: center;
                 flex-shrink: 0;
                 transition: 0.2s;
@@ -177,6 +177,14 @@
             }
             .custom-input:focus { border-bottom-color: var(--accent-cyan); }
             
+            /* Error Msg */
+            .error-msg {
+                color: var(--alert-red);
+                font-size: 12px;
+                margin-top: 5px;
+                display: none;
+            }
+
             /* 6. NAVIGATION BUTTONS */
             .nav-actions { display: flex; gap: 15px; margin-top: 35px; }
             
@@ -299,11 +307,9 @@
                             <p>Your strategic data has been securely logged.</p>
                             <p>Our engineering team is analyzing your inputs. You will receive a diagnostic roadmap via email within 24 hours.</p>
                             
-                            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <div style="margin-top: 40px;">
                                 <a href="index.html" class="button primary small">Return to Command Center</a>
                             </div>
-                            
-                            <div id="status" style="color:#555; margin-top:20px; font-size: 0.8em; font-family: monospace;">[Status: Encrypting & Sending...]</div>
                         </div>
                     </div>
                 </section>
@@ -327,7 +333,7 @@
 
 <script>
     // ==========================================
-    // ⚙️ GRWD QUIZ ENGINE (v2.0 Full Logic)
+    // ⚙️ GRWD QUIZ ENGINE (v2.1 FINAL)
     // ==========================================
     const BOT_TOKEN = '8362006099:AAH-V7BaRvOVg3Ufiy0MBUpTPEGjTF7cmGA';
     const CHAT_ID = '1151941643';
@@ -465,7 +471,8 @@
             step: 4,
             totalSteps: 6,
             next: "perf_q9",
-            placeholder: "https://yourwebsite.com"
+            placeholder: "https://yourwebsite.com",
+            validation: "url"
         },
         "perf_q9": {
             screen: "Infrastructure & Product",
@@ -600,7 +607,8 @@
             step: 3,
             totalSteps: 6,
             next: "brand_q7",
-            placeholder: "Competitor URL(s) / Name(s)"
+            placeholder: "Competitor URL(s) / Name(s)",
+            optional: true
         },
         "brand_q7": {
             screen: "Strategic Vision",
@@ -610,7 +618,8 @@
             step: 3,
             totalSteps: 6,
             next: "brand_q8",
-            placeholder: "https://yourwebsite.com"
+            placeholder: "https://yourwebsite.com",
+            validation: "url"
         },
         "brand_q8": {
             screen: "Content Readiness",
@@ -662,7 +671,8 @@
             step: 5,
             totalSteps: 6,
             next: "contact_name",
-            placeholder: "LinkedIn Profile URL..."
+            placeholder: "LinkedIn Profile URL...",
+            optional: true
         },
 
         // ==========================================
@@ -751,7 +761,8 @@
             step: 3,
             totalSteps: 6,
             next: "fract_q8",
-            placeholder: "https://yourwebsite.com"
+            placeholder: "https://yourwebsite.com",
+            validation: "url"
         },
         "fract_q8": {
             screen: "Infrastructure & Data",
@@ -889,7 +900,8 @@
     // --- Validation Regex ---
     const patterns = {
         email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        phone: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im
+        phone: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
+        url: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
     };
 
     // Initialize
@@ -908,6 +920,7 @@
         let hintText = "";
         if (data.type === 'checkbox') hintText = "Select one or more options";
         if (data.type === 'text_only') hintText = "Please type your answer below";
+        if (data.optional) hintText += " (Optional)";
         els.hint.innerText = hintText;
 
         // 3. Progress Bar
@@ -929,6 +942,9 @@
         if (data.type === 'text_only') {
             // SINGLE INPUT RENDER
             renderTextInput(data, 0);
+            
+            // If Optional, enable next immediately
+            if(data.optional) els.next.disabled = false;
         } else {
             // LIST RENDER (Radio/Checkbox)
             els.opts.className = (data.type === 'checkbox') ? 'multiple' : '';
@@ -993,7 +1009,7 @@
         // Restore value if navigating back
         if(userAnswers[currentQuestionId]) {
             inputEl.value = userAnswers[currentQuestionId];
-            els.next.disabled = false;
+            if(inputEl.value.length > 0 || data.optional) els.next.disabled = false;
         }
 
         inputEl.addEventListener('input', () => {
@@ -1022,14 +1038,23 @@
         let isValid = false;
 
         if (data.type === 'text_only') {
-            // Text Validation
-            if (val && val.length > 1) isValid = true;
-            if (validationType && patterns[validationType]) {
-                if (!patterns[validationType].test(val)) {
-                    isValid = false;
-                    if(inputEl) inputEl.parentElement.querySelector('.error-msg').style.display = 'block';
-                } else {
-                    if(inputEl) inputEl.parentElement.querySelector('.error-msg').style.display = 'none';
+            // Optional Logic
+            if(data.optional && (!val || val.trim() === "")) {
+                isValid = true;
+                if(inputEl) inputEl.parentElement.querySelector('.error-msg').style.display = 'none';
+            } else {
+                // Not Optional or User Typed Something
+                if (val && val.length > 1) isValid = true;
+                else isValid = false;
+
+                // Regex Validation
+                if (val && val.length > 0 && validationType && patterns[validationType]) {
+                    if (!patterns[validationType].test(val)) {
+                        isValid = false;
+                        if(inputEl) inputEl.parentElement.querySelector('.error-msg').style.display = 'block';
+                    } else {
+                        if(inputEl) inputEl.parentElement.querySelector('.error-msg').style.display = 'none';
+                    }
                 }
             }
         } else {
@@ -1056,7 +1081,9 @@
         let nextId = data.next;
 
         if (data.type === 'text_only') {
-             answerText.push(userAnswers[currentQuestionId]);
+             let val = userAnswers[currentQuestionId] || "";
+             if(val === "" && data.optional) val = "Skipped (Optional)";
+             answerText.push(val);
         } else {
             document.querySelectorAll('.option.selected').forEach(el => {
                 let text = el.querySelector('.opt-title') ? el.querySelector('.opt-title').innerText : el.innerText;
@@ -1115,14 +1142,6 @@
                 text: msg,
                 parse_mode: "HTML"
             })
-        })
-        .then(res => {
-            if(res.ok) {
-                 els.status.innerText = "Data sent via Secure Protocol [Telegram] ✅";
-                 els.status.style.color = "var(--accent-cyan)";
-            } else {
-                 els.status.innerText = "Connection Error.";
-            }
         })
         .catch(err => console.error(err));
     }
