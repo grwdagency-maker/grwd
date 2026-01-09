@@ -536,3 +536,36 @@ body {
     .hero-sub { font-size: 20px; }
     body { font-size: 16px; }
 }
+
+/* --- SECTION HEADERS SCALE UP --- */
+
+/* 1. Main Section Titles (Modules, Protocol, Founder) */
+.inner h2 {
+    font-size: 52px !important; /* Значительное увеличение */
+    line-height: 1.1;
+    margin-bottom: 20px;
+    letter-spacing: -0.03em; /* Плотный кернинг для стиля */
+    background: linear-gradient(180deg, #FFFFFF 0%, #AAA 100%); /* Градиент как в Hero */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 2. Sub-text under headers (Intro paragraphs) */
+.inner > p {
+    font-size: 20px !important;
+    color: #888;
+    max-width: 600px;
+    line-height: 1.6;
+}
+
+/* 3. CTA Heading (Ready to stop guessing?) */
+#cta h2 {
+    font-size: 64px !important; /* Финальный призыв должен быть огромным */
+    margin-bottom: 30px;
+}
+
+/* Mobile Adjustments */
+@media screen and (max-width: 768px) {
+    .inner h2 { font-size: 36px !important; }
+    #cta h2 { font-size: 42px !important; }
+}
