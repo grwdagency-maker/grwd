@@ -238,18 +238,8 @@
         </div>
     </div>
 </footer>
-
-            <script>
-                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                    anchor.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        document.querySelector(this.getAttribute('href')).scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    });
-                });
-            </script>
 		<script>
+    // 1. Mouse Spotlight Logic (Свет за мышкой)
     document.addEventListener('mousemove', (e) => {
         const x = e.clientX;
         const y = e.clientY;
@@ -257,6 +247,7 @@
         document.body.style.setProperty('--mouse-y', `${y}px`);
     });
 
+    // 2. Scroll Observer (Анимация появления при скролле)
     const observerOptions = {
         root: null,
         rootMargin: '0px',
@@ -267,30 +258,36 @@
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
-            } else {
-                // entry.target.classList.remove('active');
             }
         });
     }, observerOptions);
 
-    document.querySelectorAll('.timeline-item').forEach(el => {
-        observer.observe(el);
-    });
-    
-    document.querySelectorAll('.bento-card').forEach((el, index) => {
-        el.style.transitionDelay = `${index * 100}ms`;
+    // Подключаем элементы к наблюдателю
+    document.querySelectorAll('.timeline-item, .bento-card').forEach((el, index) => {
+        // Добавляем задержку для карточек, чтобы они появлялись "лесенкой"
+        if(el.classList.contains('bento-card')) {
+            el.style.transitionDelay = `${index * 100}ms`;
+        }
         observer.observe(el);
     });
 
+    // 3. Smooth Scroll (Плавная прокрутка якорей)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return; // Игнорируем пустые ссылки
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
         });
     });
 </script>
 	</body>
 </html>
+
 
