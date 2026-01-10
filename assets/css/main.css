@@ -788,3 +788,27 @@ body:hover::before { opacity: 1; }
     transform: translateY(-2px) scale(1.02);
     border-color: rgba(0, 240, 255, 1);
 }
+
+/* --- LOGO LINK STYLES --- */
+a.logo-link,
+a.mh-brand {
+    text-decoration: none;
+    border: none;
+    display: block; /* Занимает всю ширину контейнера */
+    cursor: pointer;
+    color: inherit; /* Наследуем белый цвет */
+    transition: opacity 0.3s;
+}
+
+a.logo-link:hover,
+a.mh-brand:hover {
+    border-bottom: none; /* Убираем стандартное подчеркивание темы */
+    opacity: 0.8;
+}
+
+/* Фикс для мобильной версии, чтобы элементы стояли в ряд */
+a.mh-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
