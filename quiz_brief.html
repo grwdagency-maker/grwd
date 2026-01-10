@@ -1,7 +1,5 @@
 <!DOCTYPE HTML>
-<html>
-	<head>
-		<title>GRWD | Growth Audit Protocol</title>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -54,371 +52,388 @@
     </script>
 
     <style>
-        /* ... здесь начинается ваш существующий CSS код для квиза ... */
-        /* ... ОСТАВЬТЕ ЕГО БЕЗ ИЗМЕНЕНИЙ ... */
+        /* === QUIZ ENGINE STYLES === */
+
+        /* 1. LAYOUT ENGINE (Fixing Horizontal Scrollbar) */
+        html, body {
+            overflow-x: hidden; /* Жестко запрещаем гориз. скролл */
+            width: 100%;
+        }
+
+        #wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            
+            /* Сбрасываем стили шаблона */
+            padding: 0 !important; 
+            
+            /* Сайдбар */
+            margin-left: 260px !important;
+            
+            /* ГЛАВНОЕ ИСПРАВЛЕНИЕ: */
+            /* Ширина = Весь экран минус Сайдбар. Это уберет вылезание вправо */
+            width: calc(100% - 260px) !important; 
+            position: relative;
+        }
+
+        .quiz-wrapper {
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px; /* Уменьшил боковые отступы, чтобы на моб. не жало */
+            width: 100%;
+            box-sizing: border-box; /* Гарантирует, что padding не расширяет блок */
+        }
         
-        <style>
-            /* === QUIZ ENGINE STYLES === */
+        /* Mobile adjustment override */
+        @media screen and (max-width: 900px) {
+            #wrapper { 
+                margin-left: 0 !important; 
+                width: 100% !important; 
+            }
+        }
 
-/* 1. LAYOUT ENGINE (Fixing Horizontal Scrollbar) */
-            html, body {
-                overflow-x: hidden; /* Жестко запрещаем гориз. скролл */
+        /* 2. CONTAINER DESIGN */
+        .quiz-container {
+            background: rgba(10, 14, 20, 0.9); /* Чуть темнее для контраста */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 100%;
+            max-width: 900px; /* Ширина как на главной */
+            border-radius: 12px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+            position: relative;
+            overflow: hidden;
+            padding: 50px;
+        }
+
+        .quiz-container::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            box-shadow: 0 0 15px var(--accent-cyan);
+        }
+
+        /* 3. PROGRESS BAR */
+        .progress-container {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            height: 4px;
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            display: flex;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-cyan);
+            width: 0%;
+            transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        /* 4. TYPOGRAPHY */
+        .section-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 10px;
+            display: block;
+            opacity: 0.9;
+        }
+        h2#question {
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            font-size: 26px; /* Чуть крупнее */
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        .hint {
+            color: #888;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        /* 5. OPTIONS & INPUTS */
+        .option {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            display: flex;
+            align-items: flex-start;
+            color: #ccc;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        .option:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.2);
+            color: #fff;
+            transform: translateX(4px);
+        }
+        .option.selected {
+            background: rgba(0, 240, 255, 0.08);
+            border-color: var(--accent-cyan);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.05);
+        }
+
+        /* Option Content Layout */
+        .opt-content { display: flex; flex-direction: column; width: 100%; }
+        .opt-title { font-weight: 600; color: #fff; margin-bottom: 4px; }
+        .opt-desc { font-size: 13px; color: #888; line-height: 1.4; font-weight: 300; }
+        .option.selected .opt-desc { color: #aaa; }
+
+        /* Indicators */
+        .indicator {
+            width: 18px; height: 18px;
+            border: 2px solid #555;
+            border-radius: 50%;
+            margin-right: 15px;
+            margin-top: 3px; 
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+        .multiple .indicator { border-radius: 3px; } 
+        .option.selected .indicator {
+            border-color: var(--accent-cyan);
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        /* Inputs */
+        .custom-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #555;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            padding: 5px 0;
+            width: 100%;
+            outline: none;
+            transition: 0.3s;
+            margin-top: 5px;
+        }
+        .custom-input:focus { border-bottom-color: var(--accent-cyan); }
+        
+        /* Error Msg */
+        .error-msg {
+            color: var(--alert-red);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* 6. NAVIGATION BUTTONS */
+        .nav-actions { display: flex; gap: 15px; margin-top: 35px; }
+        
+        .btn-action {
+            flex: 1;
+            background: transparent;
+            border: 1px solid #333;
+            color: #555;
+            padding: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            cursor: not-allowed;
+            transition: all 0.3s;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        #next-btn:not(:disabled) {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.05);
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+        #next-btn:not(:disabled):hover {
+            background: var(--accent-cyan);
+            color: #050505;
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
+        }
+
+        #back-btn {
+            flex: 0 0 100px;
+            border-color: #444;
+            color: #888;
+            cursor: pointer;
+            display: none;
+        }
+        #back-btn:hover { border-color: #666; color: #fff; }
+
+        /* 7. RESULT SCREEN (Cleaned Up) */
+        .result-screen { text-align: center; display: none; padding: 20px; }
+        .result-screen h2 { color: #fff; font-size: 32px; margin-bottom: 15px; font-family: 'Outfit', sans-serif; }
+        .result-screen p { color: #aaa; margin-bottom: 20px; font-size: 16px; line-height: 1.6; }
+        .check-animation {
+            font-size: 60px; color: var(--accent-cyan); margin-bottom: 30px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 0 30px var(--accent-cyan);
+        }
+        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* 8. FOOTER */
+        #footer {
+            margin-top: auto;
+            width: 100%;
+            border-top: 1px solid var(--border-light);
+            padding: 40px 0;
+            background: transparent;
+            /* CRITICAL FIX for Horizontal Scroll */
+            margin-left: 0 !important; 
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 90%;
+            margin: 0 auto;
+            font-size: 11px;
+            color: #555;
+        }
+        
+        /* Footer Links (Privacy/Terms) */
+        .copyright-block { display: flex; flex-direction: column; gap: 8px; text-align: left; }
+        .footer-links { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .footer-links a { color: #666; text-decoration: none; transition: 0.3s; }
+        .footer-links a:hover { color: var(--accent-cyan); }
+        .separator { color: #444; margin: 0 5px; }
+        
+        .legal-info { text-align: right; line-height: 1.4; }
+
+        /* 9. MOBILE & STICKY ACTIONS FIX */
+        @media screen and (max-width: 900px) {
+            #wrapper { margin-left: 0 !important; }
+            .quiz-container { padding: 30px 20px; width: 95%; }
+            h2#question { font-size: 20px; }
+            .footer-content { flex-direction: column; gap: 20px; text-align: center; }
+            .copyright-block { text-align: center; }
+            .legal-info { text-align: center; }
+
+            /* Sticky Actions for better UX */
+            .nav-actions {
+                position: fixed;
+                bottom: 0;
+                left: 0;
                 width: 100%;
-            }
-
-            #wrapper {
-                display: flex;
-                flex-direction: column;
-                min-height: 100vh;
-                
-                /* Сбрасываем стили шаблона */
-                padding: 0 !important; 
-                
-                /* Сайдбар */
-                margin-left: 260px !important;
-                
-                /* ГЛАВНОЕ ИСПРАВЛЕНИЕ: */
-                /* Ширина = Весь экран минус Сайдбар. Это уберет вылезание вправо */
-                width: calc(100% - 260px) !important; 
-                position: relative;
-            }
-
-            .quiz-wrapper {
-                flex: 1; 
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                padding: 60px 20px; /* Уменьшил боковые отступы, чтобы на моб. не жало */
-                width: 100%;
-                box-sizing: border-box; /* Гарантирует, что padding не расширяет блок */
-            }
-            
-            /* Mobile adjustment override */
-            @media screen and (max-width: 900px) {
-                #wrapper { 
-                    margin-left: 0 !important; 
-                    width: 100% !important; 
-                }
-            }
-
-            /* 2. CONTAINER DESIGN */
-            .quiz-container {
-                background: rgba(10, 14, 20, 0.9); /* Чуть темнее для контраста */
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.08);
-                width: 100%;
-                max-width: 900px; /* Ширина как на главной */
-                border-radius: 12px;
-                box-shadow: 0 40px 80px rgba(0,0,0,0.7);
-                position: relative;
-                overflow: hidden;
-                padding: 50px;
-            }
-
-            .quiz-container::before {
-                content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-                background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-                box-shadow: 0 0 15px var(--accent-cyan);
-            }
-
-            /* 3. PROGRESS BAR */
-            .progress-container {
-                width: 100%;
-                background: rgba(255,255,255,0.05);
-                height: 4px;
-                border-radius: 2px;
-                margin-bottom: 30px;
-                overflow: hidden;
-                display: flex;
-            }
-            .progress-fill {
-                height: 100%;
-                background: var(--accent-cyan);
-                width: 0%;
-                transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-                box-shadow: 0 0 10px var(--accent-cyan);
-            }
-
-            /* 4. TYPOGRAPHY */
-            .section-label {
-                font-family: 'Outfit', sans-serif;
-                font-size: 11px;
-                color: var(--accent-cyan);
-                text-transform: uppercase;
-                letter-spacing: 0.2em;
-                margin-bottom: 10px;
-                display: block;
-                opacity: 0.9;
-            }
-            h2#question {
-                font-family: 'Outfit', sans-serif;
-                color: #fff;
-                font-size: 26px; /* Чуть крупнее */
-                font-weight: 600;
-                margin-bottom: 15px;
-                line-height: 1.3;
-            }
-            .hint {
-                color: #888;
-                font-size: 14px;
-                display: block;
-                margin-bottom: 30px;
-                font-style: italic;
-            }
-
-            /* 5. OPTIONS & INPUTS */
-            .option {
-                background: rgba(255,255,255,0.02);
-                border: 1px solid rgba(255,255,255,0.08);
-                padding: 18px 22px;
-                border-radius: 8px;
-                margin-bottom: 12px;
-                cursor: pointer;
-                transition: all 0.2s ease-out;
-                display: flex;
-                align-items: flex-start;
-                color: #ccc;
-                font-size: 15px;
-                line-height: 1.5;
-            }
-            .option:hover {
-                background: rgba(255,255,255,0.05);
-                border-color: rgba(255,255,255,0.2);
-                color: #fff;
-                transform: translateX(4px);
-            }
-            .option.selected {
-                background: rgba(0, 240, 255, 0.08);
-                border-color: var(--accent-cyan);
-                color: #fff;
-                box-shadow: 0 0 20px rgba(0, 240, 255, 0.05);
-            }
-
-            /* Option Content Layout */
-            .opt-content { display: flex; flex-direction: column; width: 100%; }
-            .opt-title { font-weight: 600; color: #fff; margin-bottom: 4px; }
-            .opt-desc { font-size: 13px; color: #888; line-height: 1.4; font-weight: 300; }
-            .option.selected .opt-desc { color: #aaa; }
-
-            /* Indicators */
-            .indicator {
-                width: 18px; height: 18px;
-                border: 2px solid #555;
-                border-radius: 50%;
-                margin-right: 15px;
-                margin-top: 3px; 
-                display: flex; align-items: center; justify-content: center;
-                flex-shrink: 0;
-                transition: 0.2s;
-            }
-            .multiple .indicator { border-radius: 3px; } 
-            .option.selected .indicator {
-                border-color: var(--accent-cyan);
-                background: var(--accent-cyan);
-                box-shadow: 0 0 10px var(--accent-cyan);
-            }
-
-            /* Inputs */
-            .custom-input {
-                background: transparent;
-                border: none;
-                border-bottom: 1px solid #555;
-                color: #fff;
-                font-family: 'Inter', sans-serif;
-                font-size: 15px;
-                padding: 5px 0;
-                width: 100%;
-                outline: none;
-                transition: 0.3s;
-                margin-top: 5px;
-            }
-            .custom-input:focus { border-bottom-color: var(--accent-cyan); }
-            
-            /* Error Msg */
-            .error-msg {
-                color: var(--alert-red);
-                font-size: 12px;
-                margin-top: 5px;
-                display: none;
-            }
-
-            /* 6. NAVIGATION BUTTONS */
-            .nav-actions { display: flex; gap: 15px; margin-top: 35px; }
-            
-            .btn-action {
-                flex: 1;
-                background: transparent;
-                border: 1px solid #333;
-                color: #555;
-                padding: 18px;
-                text-transform: uppercase;
-                letter-spacing: 0.15em;
-                font-weight: 700;
-                cursor: not-allowed;
-                transition: all 0.3s;
-                border-radius: 4px;
-                font-size: 13px;
-            }
-            
-            #next-btn:not(:disabled) {
-                border-color: var(--accent-cyan);
-                color: var(--accent-cyan);
-                background: rgba(0, 240, 255, 0.05);
-                cursor: pointer;
-                box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
-            }
-            #next-btn:not(:disabled):hover {
-                background: var(--accent-cyan);
-                color: #050505;
-                box-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
-            }
-
-            #back-btn {
-                flex: 0 0 100px;
-                border-color: #444;
-                color: #888;
-                cursor: pointer;
-                display: none;
-            }
-            #back-btn:hover { border-color: #666; color: #fff; }
-
-            /* 7. RESULT SCREEN (Cleaned Up) */
-            .result-screen { text-align: center; display: none; padding: 20px; }
-            .result-screen h2 { color: #fff; font-size: 32px; margin-bottom: 15px; font-family: 'Outfit', sans-serif; }
-            .result-screen p { color: #aaa; margin-bottom: 20px; font-size: 16px; line-height: 1.6; }
-            .check-animation {
-                font-size: 60px; color: var(--accent-cyan); margin-bottom: 30px;
-                animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                text-shadow: 0 0 30px var(--accent-cyan);
-            }
-            @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
-            /* 8. FOOTER */
-            #footer {
-                margin-top: auto;
-                width: 100%;
+                background: rgba(5, 5, 5, 0.95); 
+                padding: 15px 20px;
                 border-top: 1px solid var(--border-light);
-                padding: 40px 0;
-                background: transparent;
-				margin-left: 0 !important;
+                z-index: 100;
+                margin-top: 0;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
             }
-            .footer-content {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                max-width: 90%;
-                margin: 0 auto;
-                font-size: 11px;
-                color: #555;
+            .quiz-container {
+                padding-bottom: 80px; /* Space for fixed buttons */
             }
-            
-            /* Footer Links (Privacy/Terms) */
-            .copyright-block { display: flex; flex-direction: column; gap: 8px; text-align: left; }
-            .footer-links { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
-            .footer-links a { color: #666; text-decoration: none; transition: 0.3s; }
-            .footer-links a:hover { color: var(--accent-cyan); }
-            .separator { color: #444; margin: 0 5px; }
-            
-            .legal-info { text-align: right; line-height: 1.4; }
-
-            /* 9. MOBILE */
-            @media screen and (max-width: 900px) {
-                #wrapper { margin-left: 0 !important; }
-                .quiz-container { padding: 30px 20px; width: 95%; }
-                h2#question { font-size: 20px; }
-                .footer-content { flex-direction: column; gap: 20px; text-align: center; }
-                .copyright-block { text-align: center; }
-                .legal-info { text-align: center; }
-            }
-        </style>
-	</head>
-	<body class="is-preload">
-<div id="mobile-header">
-    <div class="mh-brand">
-        <img src="images/logo.svg" alt="GRWD Logo">
-        <span>GRWD</span>
+        }
+    </style>
+</head>
+<body class="is-preload">
+    
+    <div id="mobile-header">
+        <div class="mh-brand">
+            <img src="images/logo.svg" alt="GRWD Logo">
+            <span>GRWD</span>
+        </div>
+        <button id="mobile-menu-btn">
+            <i class="fa-solid fa-bars"></i>
+        </button>
     </div>
-    <button id="mobile-menu-btn">
-        <i class="fa-solid fa-bars"></i>
-    </button>
-</div>
-			<section id="sidebar">
-                <div class="sidebar-header">
-                    <img src="images/logo.svg" alt="GRWD" class="logo-image">
-                    <span class="brand-logo">GRWD</span>
-                    <span class="brand-sub">SMART AGENCY</span>
+
+    <section id="sidebar">
+        <div class="sidebar-header">
+            <img src="images/logo.svg" alt="GRWD" class="logo-image">
+            <span class="brand-logo">GRWD</span>
+            <span class="brand-sub">SMART AGENCY</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html#intro">BACK TO SYSTEM</a></li>
+                <li><a href="#" class="active">DIAGNOSTIC MODE</a></li>
+            </ul>
+        </nav>
+    </section>
+
+    <div id="wrapper">
+
+        <section class="quiz-wrapper">
+            <div class="quiz-container">
+                
+                <div class="quiz-body" id="quiz-block">
+                    <span id="section-title" class="section-label">System Audit</span>
+                    <div class="progress-container"><div class="progress-fill" id="bar"></div></div>
+                    
+                    <h2 id="question">Initializing...</h2>
+                    <span id="type-hint" class="hint"></span>
+                    
+                    <div id="options"></div>
+                    
+                    <div class="nav-actions">
+                        <button class="btn-action" id="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                        <button class="btn-action" id="next-btn" disabled>Next Step</button>
+                    </div>
                 </div>
-				<nav>
-					<ul>
-						<li><a href="index.html#intro">BACK TO SYSTEM</a></li>
-						<li><a href="#" class="active">DIAGNOSTIC MODE</a></li>
-					</ul>
-				</nav>
-			</section>
 
-			<div id="wrapper">
-
-                <section class="quiz-wrapper">
-                    <div class="quiz-container">
-                        
-                        <div class="quiz-body" id="quiz-block">
-                            <span id="section-title" class="section-label">System Audit</span>
-                            <div class="progress-container"><div class="progress-fill" id="bar"></div></div>
-                            
-                            <h2 id="question">Initializing...</h2>
-                            <span id="type-hint" class="hint"></span>
-                            
-                            <div id="options"></div>
-                            
-                            <div class="nav-actions">
-                                <button class="btn-action" id="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</button>
-                                <button class="btn-action" id="next-btn" disabled>Next Step</button>
-                            </div>
-                        </div>
-
-                        <div id="result-block" class="result-screen">
-                            <div class="check-animation"><i class="fa-solid fa-circle-check"></i></div>
-                            <h2>Audit Submitted</h2>
-                            <p>Your strategic data has been securely logged.</p>
-                            <p>Our engineering team is analyzing your inputs. You will receive a diagnostic roadmap via email within 24 hours.</p>
-                            
-                            <div style="margin-top: 40px;">
-                                <a href="index.html" class="button primary small">Return to Command Center</a>
-                            </div>
-                        </div>
+                <div id="result-block" class="result-screen">
+                    <div class="check-animation"><i class="fa-solid fa-circle-check"></i></div>
+                    <h2>Audit Submitted</h2>
+                    <p>Your strategic data has been securely logged.</p>
+                    <p>Our engineering team is analyzing your inputs. You will receive a diagnostic roadmap via email within 24 hours.</p>
+                    
+                    <div style="margin-top: 40px;">
+                        <a href="index.html" class="button primary small">Return to Command Center</a>
                     </div>
-                </section>
+                </div>
+            </div>
+        </section>
 
-                <footer id="footer">
-                    <div class="footer-content">
-                        <div class="copyright-block">
-                            <div class="copyright">&copy; GRWD 2026. All rights reserved.</div>
-                            <div class="footer-links">
-                                <a href="privacy.html">Privacy Policy</a>
-                                <span class="separator">/</span>
-                                <a href="terms.html">Terms of Service</a>
-                            </div>
-                        </div>
-                        
-                        <div class="legal-info">
-                            <strong>GRWD</strong> (Operated by PixelPeak Dzmitry Ladzes)<br>
-                            ul. Czesława Niemena 6 lok. 111<br>
-                            61-131 Poznań, Poland<br>
-                            NIP: 7822926626
-                        </div>
+        <footer id="footer">
+            <div class="footer-content">
+                <div class="copyright-block">
+                    <div class="copyright">&copy; GRWD 2026. All rights reserved.</div>
+                    <div class="footer-links">
+                        <a href="privacy.html">Privacy Policy</a>
+                        <span class="separator">/</span>
+                        <a href="terms.html">Terms of Service</a>
                     </div>
-                </footer>
+                </div>
+                
+                <div class="legal-info">
+                    <strong>GRWD</strong> (Operated by PixelPeak Dzmitry Ladzes)<br>
+                    ul. Czesława Niemena 6 lok. 111<br>
+                    61-131 Poznań, Poland<br>
+                    NIP: 7822926626
+                </div>
+            </div>
+        </footer>
 
-			</div>
+    </div>
 
-            <script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
 
-<script>
-// ==========================================
+    <script>
+    // ==========================================
     // ⚙️ GRWD QUIZ ENGINE (v2.3 PRODUCTION)
     // ==========================================
     const BOT_TOKEN = '8362006099:AAH-V7BaRvOVg3Ufiy0MBUpTPEGjTF7cmGA';
@@ -651,622 +666,3 @@
             options: [
                 { text: "Direct Demand Generation", desc: "Content should directly lead to MQLs/Demos." },
                 { text: "Building Trust & Credibility", desc: "Softening the ground for Sales and reducing friction." },
-                { text: "Establishing Thought Leadership", desc: "Becoming the go-to authority in our niche." },
-                { text: "Improving Recruiting / Talent Acquisition" }
-            ]
-        },
-        "brand_q4": {
-            screen: "Strategic Vision",
-            q: "Which industry does your business primarily operate in?",
-            type: "radio",
-            branch: "brand",
-            step: 3,
-            totalSteps: 6,
-            next: "brand_q5",
-            options: [
-                { text: "SaaS" }, { text: "Robotics" }, { text: "EdTech" },
-                { text: "Health Tech" }, { text: "AI / GameDev" },
-                { text: "Other", input: true }
-            ]
-        },
-        "brand_q5": {
-            screen: "Strategic Vision",
-            q: "Who is the core target audience?",
-            type: "radio",
-            branch: "brand",
-            step: 3,
-            totalSteps: 6,
-            next: "brand_q6",
-            options: [
-                { text: "C-Level Executives (CEO, CTO, COO)" },
-                { text: "Technical Decision Makers" },
-                { text: "VPs / Directors of Sales/Marketing" },
-                { text: "Investors / Analysts" },
-                { text: "Other", input: true }
-            ]
-        },
-        "brand_q6": {
-            screen: "Strategic Vision",
-            q: "Which competitors are currently doing an outstanding job? (Optional)",
-            type: "text_only",
-            branch: "brand",
-            step: 3,
-            totalSteps: 6,
-            next: "brand_q7",
-            placeholder: "Competitor URL(s) / Name(s)",
-            optional: true
-        },
-        "brand_q7": {
-            screen: "Strategic Vision",
-            q: "Your website URL for messaging context:",
-            type: "text_only",
-            branch: "brand",
-            step: 3,
-            totalSteps: 6,
-            next: "brand_q8",
-            placeholder: "https://yourwebsite.com",
-            validation: "url"
-        },
-        "brand_q8": {
-            screen: "Content Readiness",
-            q: "What is the founder/executive's time commitment for content creation?",
-            type: "radio",
-            branch: "brand",
-            step: 4,
-            totalSteps: 6,
-            next: "brand_q9",
-            options: [
-                { text: "High Commitment", desc: "Ready to be filmed/write (3-5 hours per week)." },
-                { text: "Low Commitment", desc: "Can provide high-level ideas (30 min/week), rest is ghostwritten." },
-                { text: "No Commitment", desc: "Focus entirely on the corporate brand." }
-            ]
-        },
-        "brand_q9": {
-            screen: "Content Readiness",
-            q: "Current status of high-value Brand/Authority content assets?",
-            type: "radio",
-            branch: "brand",
-            step: 4,
-            totalSteps: 6,
-            next: "brand_q10",
-            options: [
-                { text: "Well-Developed", desc: "Have strong, clear, recent case studies/white papers." },
-                { text: "Needs Improvement", desc: "Have basic materials, but need expert packaging." },
-                { text: "Starting from Scratch", desc: "Minimal or no high-quality content assets." }
-            ]
-        },
-        "brand_q10": {
-            screen: "Investment",
-            q: "How much resource is currently allocated to Brand Building?",
-            type: "radio",
-            branch: "brand",
-            step: 5,
-            totalSteps: 6,
-            next: "brand_q11",
-            options: [
-                { text: "Substantial (Dedicated team/budget)" },
-                { text: "Minimal (Side project)" },
-                { text: "None (New investment)" }
-            ]
-        },
-        "brand_q11": {
-            screen: "Investment",
-            q: "Link to profile(s) you wish to scale (Optional):",
-            type: "text_only",
-            branch: "brand",
-            step: 5,
-            totalSteps: 6,
-            next: "contact_name",
-            placeholder: "LinkedIn Profile URL...",
-            optional: true
-        },
-
-        // ==========================================
-        // 🟪 BRANCH 3: FRACTIONAL PARTNER
-        // ==========================================
-        "fract_q2": {
-            screen: "Defining the Strategic Challenge",
-            q: "Which strategic problem are you hiring a Partner to solve first?",
-            type: "checkbox",
-            branch: "fract",
-            step: 2,
-            totalSteps: 6,
-            next: "fract_q3",
-            options: [
-                { text: "Building Marketing from Zero", desc: "No structured marketing, need scalable revenue system." },
-                { text: "GTM Strategy & Expansion", desc: "Roadmap for new product launch or new geography." },
-                { text: "Unit Economics & Profitability", desc: "Stop bleeding budget, fix CAC/LTV." },
-                { text: "Pipeline Engineering", desc: "Align Marketing & Sales metrics." },
-                { text: "Team Audit & Architecture", desc: "Audit internal team/agencies, hiring help." }
-            ]
-        },
-        "fract_q3": {
-            screen: "Business Maturity",
-            q: "What is your company's approximate current ARR?",
-            type: "radio",
-            branch: "fract",
-            step: 3,
-            totalSteps: 6,
-            next: "fract_q4",
-            options: [
-                { text: "Pre-Revenue / Less than $100k ARR" },
-                { text: "$100k - $500k ARR" },
-                { text: "$500k - $2M ARR" },
-                { text: "$2M - $5M+ ARR" },
-                { text: "$5M+ ARR", input: true }
-            ]
-        },
-        "fract_q4": {
-            screen: "Business Maturity",
-            q: "Which industry does your business primarily operate in?",
-            type: "radio",
-            branch: "fract",
-            step: 3,
-            totalSteps: 6,
-            next: "fract_q5",
-            options: [
-                { text: "SaaS" }, { text: "Robotics" }, { text: "EdTech" },
-                { text: "Health Tech" }, { text: "AI / GameDev" },
-                { text: "Other", input: true }
-            ]
-        },
-        "fract_q5": {
-            screen: "Business Maturity",
-            q: "Primary business objective for the next 12 months?",
-            type: "radio",
-            branch: "fract",
-            step: 3,
-            totalSteps: 6,
-            next: "fract_q6",
-            options: [
-                { text: "Secure next funding round (Seed/Series A)" },
-                { text: "Achieve Product-Market Fit (PMF)" },
-                { text: "Hit a specific revenue target" },
-                { text: "Enter and secure traction in new market" }
-            ]
-        },
-        "fract_q6": {
-            screen: "Business Maturity",
-            q: "Why choose a Fractional Partner over a full-time hire?",
-            type: "radio",
-            branch: "fract",
-            step: 3,
-            totalSteps: 6,
-            next: "fract_q7",
-            options: [
-                { text: "Cost Efficiency", desc: "Full-time C-level is too expensive." },
-                { text: "Speed & Expertise", desc: "Need expert execution immediately." },
-                { text: "Temporary Need", desc: "Fix specific problem before hiring full-time." }
-            ]
-        },
-        "fract_q7": {
-            screen: "Business Maturity",
-            q: "Website URL for strategic context:",
-            type: "text_only",
-            branch: "fract",
-            step: 3,
-            totalSteps: 6,
-            next: "fract_q8",
-            placeholder: "https://yourwebsite.com",
-            validation: "url"
-        },
-        "fract_q8": {
-            screen: "Infrastructure & Data",
-            q: "Confidence in current data quality and transparency?",
-            type: "radio",
-            branch: "fract",
-            step: 4,
-            totalSteps: 6,
-            next: "fract_q9",
-            options: [
-                { text: "High Confidence", desc: "Total Transparency. We rely on data for decisions." },
-                { text: "Moderate Confidence", desc: "We use it, but know there are gaps." },
-                { text: "Low Confidence", desc: "Reporting is chaotic or manual." }
-            ]
-        },
-        "fract_q9": {
-            screen: "Infrastructure & Data",
-            q: "Primary tracking system?",
-            type: "radio",
-            branch: "fract",
-            step: 4,
-            totalSteps: 6,
-            next: "fract_q10",
-            options: [
-                { text: "Centralized CRM (HubSpot/SF) + BI" },
-                { text: "CRM + Spreadsheets (Manual)" },
-                { text: "Spreadsheets / Manual Systems" },
-                { text: "No robust system yet" }
-            ]
-        },
-        "fract_q10": {
-            screen: "Infrastructure & Data",
-            q: "Current Growth Team structure?",
-            type: "radio",
-            branch: "fract",
-            step: 4,
-            totalSteps: 6,
-            next: "fract_q11",
-            options: [
-                { text: "Dedicated In-house Team" },
-                { text: "Hybrid (Internal + Agency)" },
-                { text: "External agencies/freelancers" },
-                { text: "None (Founder handles growth)" }
-            ]
-        },
-        "fract_q11": {
-            screen: "Partnership Expectations",
-            q: "When do you need to start?",
-            type: "radio",
-            branch: "fract",
-            step: 5,
-            totalSteps: 6,
-            next: "fract_q12",
-            options: [
-                { text: "Immediately (2-4 weeks)" },
-                { text: "Within 1-3 months" }
-            ]
-        },
-        "fract_q12": {
-            screen: "Partnership Expectations",
-            q: "Expected minimum duration?",
-            type: "radio",
-            branch: "fract",
-            step: 5,
-            totalSteps: 6,
-            next: "contact_name",
-            options: [
-                { text: "3 months (Roadmap / Fix issues)" },
-                { text: "6 months (Execution Phase)" },
-                { text: "9-12 months (Full Architecture)" }
-            ]
-        },
-
-        // ==========================================
-        // 🏁 SCREEN 6: CONTACT (COMMON)
-        // ==========================================
-        "contact_name": {
-            screen: "Final Screen: Contact Info",
-            q: "Your Company Name:",
-            type: "text_only",
-            branch: "common",
-            step: 6,
-            totalSteps: 6,
-            next: "contact_user",
-            placeholder: "Company Name"
-        },
-        "contact_user": {
-            screen: "Final Screen: Contact Info",
-            q: "Your Full Name and Title:",
-            type: "text_only",
-            branch: "common",
-            step: 6,
-            totalSteps: 6,
-            next: "contact_email",
-            placeholder: "Name, Title"
-        },
-        "contact_email": {
-            screen: "Final Screen: Contact Info",
-            q: "Your Work Email:",
-            type: "text_only",
-            branch: "common",
-            step: 6,
-            totalSteps: 6,
-            next: "contact_phone",
-            placeholder: "name@company.com",
-            validation: "email"
-        },
-        "contact_phone": {
-            screen: "Final Screen: Contact Info",
-            q: "Your Phone Number:",
-            type: "text_only",
-            branch: "common",
-            step: 6,
-            totalSteps: 6,
-            next: "FINISH",
-            placeholder: "+1 ...",
-            validation: "phone"
-        }
-    };
-
-    // --- DOM Elements ---
-    const els = {
-        block: document.getElementById('quiz-block'),
-        result: document.getElementById('result-block'),
-        sectionTitle: document.getElementById('section-title'),
-        qText: document.getElementById('question'),
-        hint: document.getElementById('type-hint'),
-        opts: document.getElementById('options'),
-        next: document.getElementById('next-btn'),
-        back: document.getElementById('back-btn'),
-        bar: document.getElementById('bar'),
-        status: document.getElementById('status')
-    };
-
-    // --- Validation Regex ---
-    const patterns = {
-        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        phone: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
-        url: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
-    };
-
-    // Initialize
-    renderQuestion();
-
-    // --- MAIN RENDER FUNCTION ---
-    function renderQuestion() {
-        const data = quizData[currentQuestionId];
-        if (!data) return finishQuiz();
-
-        // 1. Update UI Text
-        els.sectionTitle.innerText = data.screen || "System Audit";
-        els.qText.innerText = data.q;
-        
-        // 2. Hint Logic
-        let hintText = "";
-        if (data.type === 'checkbox') hintText = "Select one or more options";
-        if (data.type === 'text_only') hintText = "Please type your answer below";
-        if (data.optional) hintText += " (Optional)";
-        els.hint.innerText = hintText;
-
-        // 3. Progress Bar
-        const progress = (data.step / data.totalSteps) * 100;
-        els.bar.style.width = `${progress}%`;
-
-        // 4. Back Button Logic
-        els.back.style.display = (currentQuestionId === "start") ? "none" : "block";
-
-        // 5. GTM Data Attribute
-        let branchCode = currentBranch || "root";
-        let screenNum = data.step;
-        els.next.setAttribute('data-gtm-id', `quiz_continue_${branchCode}_screen_${screenNum}`);
-
-        // 6. Render Options
-        els.opts.innerHTML = '';
-        els.next.disabled = true;
-
-        if (data.type === 'text_only') {
-            // SINGLE INPUT RENDER
-            renderTextInput(data, 0);
-            
-            // If Optional, enable next immediately, BUT if user types garbage, disable it
-            if(data.optional) {
-                 els.next.disabled = false;
-                 // If previous answer exists, check it
-                 if(userAnswers[currentQuestionId]) {
-                      // re-validate in case user went back
-                      // (We re-validate inside renderTextInput too)
-                 }
-            }
-        } else {
-            // LIST RENDER (Radio/Checkbox)
-            els.opts.className = (data.type === 'checkbox') ? 'multiple' : '';
-            data.options.forEach((opt, idx) => {
-                const div = document.createElement('div');
-                div.className = 'option';
-                
-                // HTML Content Structure
-                let html = `<div class="indicator"></div>`;
-                html += `<div class="opt-content">`;
-                
-                // Title
-                if(opt.text) html += `<div class="opt-title">${opt.text}</div>`;
-                
-                // Description (NEW LOGIC)
-                if(opt.desc) html += `<div class="opt-desc">${opt.desc}</div>`;
-                
-                // Input inside option
-                if(opt.input) {
-                    html += `<input type="text" class="custom-input" placeholder="${opt.placeholder || 'Specify...'}" id="opt-input-${idx}">`;
-                }
-                
-                html += `</div>`; // end opt-content
-
-                div.innerHTML = html;
-                
-                // Click Event
-                div.onclick = (e) => {
-                    if (e.target.tagName === 'INPUT') return; 
-                    handleSelection(div, opt, data.type);
-                    if (opt.input) setTimeout(() => document.getElementById(`opt-input-${idx}`).focus(), 50);
-                };
-
-                // Input Event (Validation)
-                if (opt.input) {
-                    const inputEl = div.querySelector('input');
-                    inputEl.addEventListener('input', () => {
-                        if (!div.classList.contains('selected')) handleSelection(div, opt, data.type);
-                        validateStep();
-                    });
-                }
-
-                els.opts.appendChild(div);
-            });
-        }
-    }
-
-    function renderTextInput(data, idx) {
-        const div = document.createElement('div');
-        div.className = 'option input-only-option'; // Special class for cursor
-        div.style.cursor = "text"; 
-        
-        let html = `<input type="text" class="custom-input" placeholder="${data.placeholder}" id="text-input-${idx}">`;
-        if (data.validation) {
-             html += `<div class="error-msg" id="err-${idx}">Invalid format</div>`;
-        }
-        div.innerHTML = html;
-        
-        // Focus when clicking container
-        div.onclick = () => document.getElementById(`text-input-${idx}`).focus();
-        
-        els.opts.appendChild(div);
-
-        const inputEl = div.querySelector('input');
-        inputEl.focus();
-        
-        // Restore value if navigating back
-        if(userAnswers[currentQuestionId]) {
-            inputEl.value = userAnswers[currentQuestionId];
-            // Re-run validation
-            validateStep(data.validation, inputEl.value, inputEl);
-            if(data.optional && inputEl.value === "") els.next.disabled = false;
-        }
-
-        inputEl.addEventListener('input', () => {
-            userAnswers[currentQuestionId] = inputEl.value;
-            validateStep(data.validation, inputEl.value, inputEl);
-        });
-    }
-
-    // --- LOGIC HANDLERS ---
-    
-    function handleSelection(el, opt, type) {
-        const isMulti = (type === 'checkbox');
-        
-        if (isMulti) {
-            el.classList.toggle('selected');
-        } else {
-            // Single choice: clear others
-            document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-            el.classList.add('selected');
-        }
-        validateStep();
-    }
-
-    function validateStep(validationType, val, inputEl) {
-        const data = quizData[currentQuestionId];
-        let isValid = false;
-
-        if (data.type === 'text_only') {
-            // Optional Logic
-            if(data.optional && (!val || val.trim() === "")) {
-                isValid = true;
-                if(inputEl) inputEl.parentElement.querySelector('.error-msg').style.display = 'none';
-            } else {
-                // Not Optional or User Typed Something
-                if (val && val.length > 1) isValid = true;
-                else isValid = false;
-
-                // Regex Validation
-                if (val && val.length > 0 && validationType && patterns[validationType]) {
-                    if (!patterns[validationType].test(val)) {
-                        isValid = false;
-                        if(inputEl) inputEl.parentElement.querySelector('.error-msg').style.display = 'block';
-                    } else {
-                        if(inputEl) inputEl.parentElement.querySelector('.error-msg').style.display = 'none';
-                    }
-                }
-            }
-        } else {
-            // Selection Validation
-            const selected = document.querySelectorAll('.option.selected');
-            if (selected.length > 0) {
-                isValid = true;
-                // Check inner inputs
-                selected.forEach(sel => {
-                    const inp = sel.querySelector('input');
-                    if (inp && inp.value.trim() === "") isValid = false;
-                });
-            }
-        }
-
-        els.next.disabled = !isValid;
-    }
-
-    // --- NAVIGATION ---
-
-    els.next.onclick = () => {
-        const data = quizData[currentQuestionId];
-        let answerText = [];
-        let nextId = data.next;
-
-        if (data.type === 'text_only') {
-             let val = userAnswers[currentQuestionId] || "";
-             if(val === "" && data.optional) val = "Skipped (Optional)";
-             answerText.push(val);
-        } else {
-            document.querySelectorAll('.option.selected').forEach(el => {
-                let text = el.querySelector('.opt-title') ? el.querySelector('.opt-title').innerText : el.innerText;
-                const inp = el.querySelector('input');
-                if (inp) text += ": " + inp.value;
-                
-                // Branch Logic
-                const optData = data.options.find(o => text.includes(o.text));
-                if (optData && optData.setBranch) currentBranch = optData.setBranch;
-                if (optData && optData.next) nextId = optData.next; 
-
-                answerText.push(text);
-            });
-        }
-
-        userAnswers[currentQuestionId] = answerText.join(' | ');
-        historyStack.push(currentQuestionId);
-
-        // 🔥 GTM EVENT: Шаг пройден (Funnel Tracking)
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-            'event': 'quiz_step_complete',
-            'quiz_branch': currentBranch || 'not_set',
-            'step_number': quizData[currentQuestionId].step,
-            'question_id': currentQuestionId
-        });
-
-        if (nextId === "FINISH") {
-            finishQuiz();
-        } else {
-            currentQuestionId = nextId;
-            renderQuestion();
-        }
-    };
-
-    els.back.onclick = () => {
-        if (historyStack.length === 0) return;
-        currentQuestionId = historyStack.pop();
-        renderQuestion();
-    };
-
-    // --- FINISH & SEND ---
-
-    function finishQuiz() {
-        // 1. GTM Tracking (Analytics)
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-            'event': 'generate_lead',
-            'quiz_branch': currentBranch,
-            'source': 'quiz_brief'
-        });
-        console.log('GTM Lead Event Fired');
-
-        // 2. UI Updates (Swith to Success Screen)
-        els.block.style.display = 'none';
-        els.result.style.display = 'block';
-
-        // 3. Telegram Logic (Message Construction)
-        let msg = `<b>📊 GRWD Audit Submission</b>\n`;
-        msg += `➖➖➖➖➖➖➖\n`;
-        msg += `🏷 <b>Branch:</b> ${currentBranch ? currentBranch.toUpperCase() : 'ROOT'}\n\n`;
-
-        historyStack.forEach(qid => {
-            const q = quizData[qid];
-            const ans = userAnswers[qid];
-            msg += `<b>${q.screen}</b>\n`;
-            msg += `❓ ${q.q}\n`;
-            msg += `✅ <i>${ans}</i>\n\n`;
-        });
-
-        // 4. Send to API
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: msg,
-                parse_mode: "HTML"
-            })
-        })
-        .catch(err => console.error(err));
-    }
-</script>
-
-	</body>
-</html>
