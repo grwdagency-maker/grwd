@@ -1241,6 +1241,18 @@ els.next.onclick = () => {
     // --- FINISH & SEND ---
 
     function finishQuiz() {
+		window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        'event': 'generate_lead',
+        'quiz_branch': currentBranch,
+        'source': 'quiz_brief'
+    });
+    console.log('GTM Lead Event Fired');
+
+    els.block.style.display = 'none';
+    els.result.style.display = 'block';
+    
+}
         els.block.style.display = 'none';
         els.result.style.display = 'block';
         
