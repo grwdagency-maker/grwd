@@ -1245,15 +1245,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     // --- FINISH & SEND ---
 
+// --- FINISH & SEND ---
+
     function finishQuiz() {
+        // 1. CONFIGURATION (HubSpot EU1)
+        const HS_PORTAL_ID = '147325178'; 
+        const HS_FORM_ID = '10380236-00e8-4fee-99fd-2f886885c933';
+
+        // 2. UI UPDATE
         els.block.style.display = 'none';
         els.result.style.display = 'block';
         
-        // 1. TELEGRAM LOGIC
+        // 3. DATA PREPARATION
+        // Собираем читабельный текст для заметки в CRM
+        let quizSummary = `📊 GRWD Audit Results\nBranch: ${currentBranch || 'ROOT'}\n----------------\n`;
+        historyStack.forEach(qid => {
+            if(!userAnswers[qid]) return;
+            // Чистим HTML теги из вопросов
+            let cleanQ = quizData[qid].q.replace(/<\/?[^>]+(>|$)/g, "");
+            quizSummary += `${cleanQ}\n>> ${userAnswers[qid]}\n\n`;
+        });
+
+        // Парсим Имя (HubSpot требует разделять First/Last Name)
+        let fullName = userAnswers['contact_user'] || "Unknown User";
+        let nameParts = fullName.trim().split(" ");
+        let firstName = nameParts[0];
+        let lastName = nameParts.slice(1).join(" ") || "-";
+
+        // 4. TELEGRAM SEND (Оставляем как было)
         let msg = `<b>📊 GRWD Audit Submission</b>\n`;
         msg += `➖➖➖➖➖➖➖\n`;
         msg += `🏷 <b>Branch:</b> ${currentBranch ? currentBranch.toUpperCase() : 'ROOT'}\n\n`;
-
         historyStack.forEach(qid => {
             const q = quizData[qid];
             const ans = userAnswers[qid];
@@ -1270,14 +1292,46 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 text: msg,
                 parse_mode: "HTML"
             })
-        })
-        .catch(err => console.error(err));
+        }).catch(err => console.error("TG Error:", err));
 
-        // 2. ANALYTICS EVENT (GTM PUSH) - ЭТО НОВАЯ ЧАСТЬ
+        // 5. HUBSPOT SEND (INTEGRATION)
+        const hsData = {
+            "submittedAt": Date.now(),
+            "fields": [
+                { "name": "email", "value": userAnswers['contact_email'] },
+                { "name": "firstname", "value": firstName },
+                { "name": "lastname", "value": lastName },
+                { "name": "company", "value": userAnswers['contact_name'] },
+                { "name": "phone", "value": userAnswers['contact_phone'] },
+                { "name": "message", "value": quizSummary } 
+            ],
+            "context": {
+                "pageUri": window.location.href,
+                "pageName": document.title
+            }
+        };
+
+        // Используем URL API (не JS embed, чтобы не показывать форму визуально)
+        const hsUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${HS_PORTAL_ID}/${HS_FORM_ID}`;
+
+        fetch(hsUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(hsData)
+        })
+        .then(response => {
+            if(response.ok) console.log("✅ Sent to HubSpot CRM");
+            else console.error("❌ HubSpot Error", response);
+        })
+        .catch(error => console.error('HS Network Error:', error));
+
+        // 6. GA4 / GTM EVENT
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
-            'event': 'generate_lead', // Стандартное событие GA4
-            'lead_type': currentBranch || 'general', // Передаем ветку (perf, brand, fract)
+            'event': 'generate_lead',
+            'lead_type': currentBranch || 'general',
             'page_location': window.location.href
         });
         
