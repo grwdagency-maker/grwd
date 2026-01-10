@@ -1245,21 +1245,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     // --- FINISH & SEND ---
 
-    function finishQuiz() {
-        // 1. GTM Tracking (Analytics)
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-            'event': 'generate_lead',
-            'quiz_branch': currentBranch,
-            'source': 'quiz_brief'
-        });
-        console.log('GTM Lead Event Fired');
+// --- FINISH & SEND ---
 
-        // 2. UI Updates (Swith to Success Screen)
+    function finishQuiz() {
         els.block.style.display = 'none';
         els.result.style.display = 'block';
-
-        // 3. Telegram Logic (Message Construction)
+        
+        // 1. TELEGRAM LOGIC
         let msg = `<b>📊 GRWD Audit Submission</b>\n`;
         msg += `➖➖➖➖➖➖➖\n`;
         msg += `🏷 <b>Branch:</b> ${currentBranch ? currentBranch.toUpperCase() : 'ROOT'}\n\n`;
@@ -1272,7 +1264,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             msg += `✅ <i>${ans}</i>\n\n`;
         });
 
-        // 4. Send to API
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -1283,6 +1274,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             })
         })
         .catch(err => console.error(err));
+
+        // 2. ANALYTICS EVENT (GTM PUSH) - ЭТО НОВАЯ ЧАСТЬ
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            'event': 'generate_lead', // Стандартное событие GA4
+            'lead_type': currentBranch || 'general', // Передаем ветку (perf, brand, fract)
+            'page_location': window.location.href
+        });
+        
+        console.log("Analytics Event Sent: generate_lead");
     }
         // 5. Smart Logo Logic (Scroll Top vs Go Home)
     const logoLinks = document.querySelectorAll('.js-logo-action');
