@@ -1201,7 +1201,29 @@
 
         userAnswers[currentQuestionId] = answerText.join(' | ');
         historyStack.push(currentQuestionId);
+els.next.onclick = () => {
+    // ... (существующий код сбора ответов) ...
 
+    userAnswers[currentQuestionId] = answerText.join(' | ');
+    historyStack.push(currentQuestionId);
+
+    // 🔥 [НАЧАЛО ВСТАВКИ] GTM EVENT: Шаг пройден
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        'event': 'quiz_step_complete',
+        'quiz_branch': currentBranch || 'not_set',
+        'step_number': quizData[currentQuestionId].step,
+        'question_id': currentQuestionId
+    });
+    // 🔥 [КОНЕЦ ВСТАВКИ]
+
+    if (nextId === "FINISH") {
+        finishQuiz();
+    } else {
+        currentQuestionId = nextId;
+        renderQuestion();
+    }
+};
         if (nextId === "FINISH") {
             finishQuiz();
         } else {
