@@ -418,8 +418,8 @@
 			<script src="assets/js/main.js"></script>
 
 <script>
-    // ==========================================
-    // ⚙️ GRWD QUIZ ENGINE (v2.2 FIXED)
+// ==========================================
+    // ⚙️ GRWD QUIZ ENGINE (v2.3 PRODUCTION)
     // ==========================================
     const BOT_TOKEN = '8362006099:AAH-V7BaRvOVg3Ufiy0MBUpTPEGjTF7cmGA';
     const CHAT_ID = '1151941643';
@@ -1201,29 +1201,16 @@
 
         userAnswers[currentQuestionId] = answerText.join(' | ');
         historyStack.push(currentQuestionId);
-els.next.onclick = () => {
-    // ... (существующий код сбора ответов) ...
 
-    userAnswers[currentQuestionId] = answerText.join(' | ');
-    historyStack.push(currentQuestionId);
+        // 🔥 GTM EVENT: Шаг пройден (Funnel Tracking)
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            'event': 'quiz_step_complete',
+            'quiz_branch': currentBranch || 'not_set',
+            'step_number': quizData[currentQuestionId].step,
+            'question_id': currentQuestionId
+        });
 
-    // 🔥 [НАЧАЛО ВСТАВКИ] GTM EVENT: Шаг пройден
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-        'event': 'quiz_step_complete',
-        'quiz_branch': currentBranch || 'not_set',
-        'step_number': quizData[currentQuestionId].step,
-        'question_id': currentQuestionId
-    });
-    // 🔥 [КОНЕЦ ВСТАВКИ]
-
-    if (nextId === "FINISH") {
-        finishQuiz();
-    } else {
-        currentQuestionId = nextId;
-        renderQuestion();
-    }
-};
         if (nextId === "FINISH") {
             finishQuiz();
         } else {
@@ -1241,21 +1228,20 @@ els.next.onclick = () => {
     // --- FINISH & SEND ---
 
     function finishQuiz() {
-		window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-        'event': 'generate_lead',
-        'quiz_branch': currentBranch,
-        'source': 'quiz_brief'
-    });
-    console.log('GTM Lead Event Fired');
+        // 1. GTM Tracking (Analytics)
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            'event': 'generate_lead',
+            'quiz_branch': currentBranch,
+            'source': 'quiz_brief'
+        });
+        console.log('GTM Lead Event Fired');
 
-    els.block.style.display = 'none';
-    els.result.style.display = 'block';
-    
-}
+        // 2. UI Updates (Swith to Success Screen)
         els.block.style.display = 'none';
         els.result.style.display = 'block';
-        
+
+        // 3. Telegram Logic (Message Construction)
         let msg = `<b>📊 GRWD Audit Submission</b>\n`;
         msg += `➖➖➖➖➖➖➖\n`;
         msg += `🏷 <b>Branch:</b> ${currentBranch ? currentBranch.toUpperCase() : 'ROOT'}\n\n`;
@@ -1268,6 +1254,7 @@ els.next.onclick = () => {
             msg += `✅ <i>${ans}</i>\n\n`;
         });
 
+        // 4. Send to API
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -1279,7 +1266,6 @@ els.next.onclick = () => {
         })
         .catch(err => console.error(err));
     }
-
 </script>
 
 	</body>
