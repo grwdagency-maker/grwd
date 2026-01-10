@@ -1278,6 +1278,29 @@
         })
         .catch(err => console.error(err));
     }
+        // 5. Smart Logo Logic (Scroll Top vs Go Home)
+    const logoLinks = document.querySelectorAll('.js-logo-action');
+    
+    logoLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            // Получаем текущий путь (например, /index.html или просто /)
+            const path = window.location.pathname;
+            const isHomePage = path === '/' || path.endsWith('index.html') || path.endsWith('/grwd/'); // Учитываем папку, если есть
+
+            if (isHomePage) {
+                // Если мы уже на главной - не перезагружаем, а скроллим вверх
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                
+                // Опционально: убираем хэш из URL (очищаем адресную строку)
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+            }
+            // Если мы НЕ на главной - сработает стандартный href="index.html"
+        });
+    });
     </script>
 
 </body>
