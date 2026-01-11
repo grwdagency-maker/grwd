@@ -2,19 +2,20 @@
 <html lang="en">
 <head>
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WRG5DS9N');</script>
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="shortcut icon" href="/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<meta name="apple-mobile-web-app-title" content="grwd" />
-<link rel="manifest" href="/site.webmanifest" />
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WRG5DS9N');</script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <title>Start Growth Audit | Diagnostic Protocol by GRWD</title>
+
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="grwd" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <meta name="description" content="Initialize your B2B marketing diagnostic. Get a tailored growth roadmap for your SaaS, Robotics, or AI product in 6 steps.">
     <meta name="keywords" content="Marketing Audit, B2B Growth Strategy, SaaS Metric Check, Robotics Marketing Diagnostic">
@@ -65,9 +66,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <style>
         /* === QUIZ ENGINE STYLES === */
 
-        /* 1. LAYOUT ENGINE (Fixing Horizontal Scrollbar) */
+        /* 1. LAYOUT ENGINE */
         html, body {
-            overflow-x: hidden; /* Жестко запрещаем гориз. скролл */
+            overflow-x: hidden;
             width: 100%;
         }
 
@@ -345,25 +346,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 <body class="is-preload">
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WRG5DS9N"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<div id="mobile-header">
-    <a href="index.html" class="mh-brand js-logo-action">
-        <img src="images/logo.svg" alt="GRWD Logo">
-        <span>GRWD</span>
-    </a>
-    <button id="mobile-menu-btn">
-        <i class="fa-solid fa-bars"></i>
-    </button>
-</div>
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+    <div id="mobile-header">
+        <a href="index.html" class="mh-brand js-logo-action">
+            <img src="images/logo.svg" alt="GRWD Logo">
+            <span>GRWD</span>
+        </a>
+        <button id="mobile-menu-btn">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
 
     <section id="sidebar">
-<div class="sidebar-header">
-    <a href="index.html" class="logo-link js-logo-action">
-        <img src="images/logo.svg" alt="GRWD" class="logo-image">
-        <span class="brand-logo">GRWD</span>
-        <span class="brand-sub">SMART AGENCY</span>
-    </a>
-</div>
+        <div class="sidebar-header">
+            <a href="index.html" class="logo-link js-logo-action">
+                <img src="images/logo.svg" alt="GRWD" class="logo-image">
+                <span class="brand-logo">GRWD</span>
+                <span class="brand-sub">SMART AGENCY</span>
+            </a>
+        </div>
         <nav>
             <ul>
                 <li><a href="index.html#intro">BACK TO SYSTEM</a></li>
@@ -437,10 +439,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <script>
     // ==========================================
-    // ⚙️ GRWD QUIZ ENGINE (v2.3 PRODUCTION)
+    // ⚙️ GRWD QUIZ ENGINE (v2.4 STABLE)
     // ==========================================
     const BOT_TOKEN = '8362006099:AAH-V7BaRvOVg3Ufiy0MBUpTPEGjTF7cmGA';
-    const _ID = '-1003683141855';
+    // ✅ FIXED: Updated to correct Chat ID provided by user
+    const CHAT_ID = '-1003683141855';
 
     // State Management
     let currentQuestionId = "start";
@@ -1210,7 +1213,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         renderQuestion();
     };
 
-
+    // ==========================================
+    // ✅ FINAL SUBMISSION ENGINE
+    // ==========================================
     function finishQuiz() {
         const HS_PORTAL_ID = '147325178'; 
         const HS_FORM_ID = '10380236-00e8-4fee-99fd-2f886885c933';
@@ -1218,6 +1223,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         els.block.style.display = 'none';
         els.result.style.display = 'block';
         
+        // 1. Prepare Data
         let quizSummary = `📊 GRWD Audit Results\nBranch: ${currentBranch || 'ROOT'}\n----------------\n`;
         historyStack.forEach(qid => {
             if(!userAnswers[qid]) return;
@@ -1227,9 +1233,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         let fullName = userAnswers['contact_user'] || "Unknown User";
         let nameParts = fullName.trim().split(" ");
-        let firstName = nameParts[0];
+        let firstName = nameParts[0] || "-";
         let lastName = nameParts.slice(1).join(" ") || "-";
 
+        // 2. HubSpot Submission (Independent)
+        const hsData = {
+            "submittedAt": Date.now(),
+            "fields": [
+                { "name": "email", "value": userAnswers['contact_email'] },
+                { "name": "firstname", "value": firstName },
+                { "name": "lastname", "value": lastName },
+                { "name": "company", "value": userAnswers['contact_name'] },
+                { "name": "phone", "value": userAnswers['contact_phone'] },
+                { "name": "message", "value": quizSummary }
+            ],
+            "context": {
+                "pageUri": window.location.href,
+                "pageName": document.title
+            }
+        };
+
+        const hsUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${HS_PORTAL_ID}/${HS_FORM_ID}`;
+
+        fetch(hsUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(hsData)
+        })
+        .then(response => {
+            if(response.ok) console.log("✅ Sent to HubSpot CRM");
+            else console.error("❌ HubSpot Error", response);
+        })
+        .catch(error => console.error('HS Network Error:', error));
+
+        // 3. Telegram Notification (Independent)
         let msg = `<b>📊 GRWD Audit Submission</b>\n`;
         msg += `➖➖➖➖➖➖➖\n`;
         msg += `🏷 <b>Branch:</b> ${currentBranch ? currentBranch.toUpperCase() : 'ROOT'}\n\n`;
@@ -1245,43 +1282,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                chat_id: CHAT_ID,
+                chat_id: CHAT_ID, // Corrected variable usage
                 text: msg,
                 parse_mode: "HTML"
             })
         }).catch(err => console.error("TG Error:", err));
 
-        const hsData = {
-            "submittedAt": Date.now(),
-            "fields": [
-                { "name": "email", "value": userAnswers['contact_email'] },
-                { "name": "firstname", "value": firstName },
-                { "name": "lastname", "value": lastName },
-                { "name": "company", "value": userAnswers['contact_name'] },
-                { "name": "phone", "value": userAnswers['contact_phone'] },
-                { "name": "message", "value": quizSummary } 
-            ],
-            "context": {
-                "pageUri": window.location.href,
-                "pageName": document.title
-            }
-        };
-
-        const hsUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${HS_PORTAL_ID}/${HS_FORM_ID}`;
-
-        fetch(hsUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(hsData)
-        })
-        .then(response => {
-            if(response.ok) console.log("✅ Sent to HubSpot CRM");
-            else console.error("❌ HubSpot Error", response);
-        })
-        .catch(error => console.error('HS Network Error:', error));
-
+        // 4. Analytics
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
             'event': 'generate_lead',
@@ -1291,6 +1298,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
         console.log("Analytics Event Sent: generate_lead");
     }
+
     const logoLinks = document.querySelectorAll('.js-logo-action');
     
     logoLinks.forEach(link => {
