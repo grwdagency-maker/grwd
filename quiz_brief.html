@@ -440,7 +440,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     // ⚙️ GRWD QUIZ ENGINE (v2.3 PRODUCTION)
     // ==========================================
     const BOT_TOKEN = '8362006099:AAH-V7BaRvOVg3Ufiy0MBUpTPEGjTF7cmGA';
-    const CHAT_ID = '1151941643';
+    const _ID = '-1003683141855';
 
     // State Management
     let currentQuestionId = "start";
@@ -987,7 +987,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
     };
 
-    // --- DOM Elements ---
     const els = {
         block: document.getElementById('quiz-block'),
         result: document.getElementById('result-block'),
@@ -1001,95 +1000,74 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         status: document.getElementById('status')
     };
 
-    // --- Validation Regex ---
     const patterns = {
         email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         phone: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
         url: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
     };
 
-    // Initialize
     renderQuestion();
 
-    // --- MAIN RENDER FUNCTION ---
     function renderQuestion() {
         const data = quizData[currentQuestionId];
         if (!data) return finishQuiz();
 
-        // 1. Update UI Text
         els.sectionTitle.innerText = data.screen || "System Audit";
         els.qText.innerText = data.q;
         
-        // 2. Hint Logic
         let hintText = "";
         if (data.type === 'checkbox') hintText = "Select one or more options";
         if (data.type === 'text_only') hintText = "Please type your answer below";
         if (data.optional) hintText += " (Optional)";
         els.hint.innerText = hintText;
 
-        // 3. Progress Bar
         const progress = (data.step / data.totalSteps) * 100;
         els.bar.style.width = `${progress}%`;
 
-        // 4. Back Button Logic
         els.back.style.display = (currentQuestionId === "start") ? "none" : "block";
 
-        // 5. GTM Data Attribute
         let branchCode = currentBranch || "root";
         let screenNum = data.step;
         els.next.setAttribute('data-gtm-id', `quiz_continue_${branchCode}_screen_${screenNum}`);
 
-        // 6. Render Options
         els.opts.innerHTML = '';
         els.next.disabled = true;
 
         if (data.type === 'text_only') {
-            // SINGLE INPUT RENDER
             renderTextInput(data, 0);
             
-            // If Optional, enable next immediately, BUT if user types garbage, disable it
             if(data.optional) {
                  els.next.disabled = false;
-                 // If previous answer exists, check it
                  if(userAnswers[currentQuestionId]) {
-                      // re-validate in case user went back
-                      // (We re-validate inside renderTextInput too)
                  }
             }
         } else {
-            // LIST RENDER (Radio/Checkbox)
             els.opts.className = (data.type === 'checkbox') ? 'multiple' : '';
             data.options.forEach((opt, idx) => {
                 const div = document.createElement('div');
                 div.className = 'option';
                 
-                // HTML Content Structure
                 let html = `<div class="indicator"></div>`;
                 html += `<div class="opt-content">`;
                 
-                // Title
                 if(opt.text) html += `<div class="opt-title">${opt.text}</div>`;
                 
-                // Description (NEW LOGIC)
                 if(opt.desc) html += `<div class="opt-desc">${opt.desc}</div>`;
                 
-                // Input inside option
                 if(opt.input) {
                     html += `<input type="text" class="custom-input" placeholder="${opt.placeholder || 'Specify...'}" id="opt-input-${idx}">`;
                 }
                 
-                html += `</div>`; // end opt-content
+                html += `</div>`;
 
                 div.innerHTML = html;
                 
-                // Click Event
                 div.onclick = (e) => {
                     if (e.target.tagName === 'INPUT') return; 
                     handleSelection(div, opt, data.type);
                     if (opt.input) setTimeout(() => document.getElementById(`opt-input-${idx}`).focus(), 50);
                 };
 
-                // Input Event (Validation)
                 if (opt.input) {
                     const inputEl = div.querySelector('input');
                     inputEl.addEventListener('input', () => {
@@ -1105,7 +1083,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     function renderTextInput(data, idx) {
         const div = document.createElement('div');
-        div.className = 'option input-only-option'; // Special class for cursor
+        div.className = 'option input-only-option';
         div.style.cursor = "text"; 
         
         let html = `<input type="text" class="custom-input" placeholder="${data.placeholder}" id="text-input-${idx}">`;
@@ -1114,7 +1092,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
         div.innerHTML = html;
         
-        // Focus when clicking container
         div.onclick = () => document.getElementById(`text-input-${idx}`).focus();
         
         els.opts.appendChild(div);
@@ -1122,10 +1099,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const inputEl = div.querySelector('input');
         inputEl.focus();
         
-        // Restore value if navigating back
         if(userAnswers[currentQuestionId]) {
             inputEl.value = userAnswers[currentQuestionId];
-            // Re-run validation
+
             validateStep(data.validation, inputEl.value, inputEl);
             if(data.optional && inputEl.value === "") els.next.disabled = false;
         }
@@ -1136,7 +1112,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         });
     }
 
-    // --- LOGIC HANDLERS ---
     
     function handleSelection(el, opt, type) {
         const isMulti = (type === 'checkbox');
@@ -1144,7 +1119,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (isMulti) {
             el.classList.toggle('selected');
         } else {
-            // Single choice: clear others
             document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
             el.classList.add('selected');
         }
@@ -1156,16 +1130,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         let isValid = false;
 
         if (data.type === 'text_only') {
-            // Optional Logic
             if(data.optional && (!val || val.trim() === "")) {
                 isValid = true;
                 if(inputEl) inputEl.parentElement.querySelector('.error-msg').style.display = 'none';
             } else {
-                // Not Optional or User Typed Something
                 if (val && val.length > 1) isValid = true;
                 else isValid = false;
 
-                // Regex Validation
                 if (val && val.length > 0 && validationType && patterns[validationType]) {
                     if (!patterns[validationType].test(val)) {
                         isValid = false;
@@ -1176,7 +1147,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
             }
         } else {
-            // Selection Validation
+
             const selected = document.querySelectorAll('.option.selected');
             if (selected.length > 0) {
                 isValid = true;
@@ -1190,8 +1161,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         els.next.disabled = !isValid;
     }
-
-    // --- NAVIGATION ---
 
     els.next.onclick = () => {
         const data = quizData[currentQuestionId];
@@ -1208,7 +1177,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 const inp = el.querySelector('input');
                 if (inp) text += ": " + inp.value;
                 
-                // Branch Logic
                 const optData = data.options.find(o => text.includes(o.text));
                 if (optData && optData.setBranch) currentBranch = optData.setBranch;
                 if (optData && optData.next) nextId = optData.next; 
@@ -1220,7 +1188,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         userAnswers[currentQuestionId] = answerText.join(' | ');
         historyStack.push(currentQuestionId);
 
-        // 🔥 GTM EVENT: Шаг пройден (Funnel Tracking)
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
             'event': 'quiz_step_complete',
@@ -1243,36 +1210,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         renderQuestion();
     };
 
-    // --- FINISH & SEND ---
-
-// --- FINISH & SEND ---
 
     function finishQuiz() {
-        // 1. CONFIGURATION (HubSpot EU1)
         const HS_PORTAL_ID = '147325178'; 
         const HS_FORM_ID = '10380236-00e8-4fee-99fd-2f886885c933';
 
-        // 2. UI UPDATE
         els.block.style.display = 'none';
         els.result.style.display = 'block';
         
-        // 3. DATA PREPARATION
-        // Собираем читабельный текст для заметки в CRM
         let quizSummary = `📊 GRWD Audit Results\nBranch: ${currentBranch || 'ROOT'}\n----------------\n`;
         historyStack.forEach(qid => {
             if(!userAnswers[qid]) return;
-            // Чистим HTML теги из вопросов
             let cleanQ = quizData[qid].q.replace(/<\/?[^>]+(>|$)/g, "");
             quizSummary += `${cleanQ}\n>> ${userAnswers[qid]}\n\n`;
         });
 
-        // Парсим Имя (HubSpot требует разделять First/Last Name)
         let fullName = userAnswers['contact_user'] || "Unknown User";
         let nameParts = fullName.trim().split(" ");
         let firstName = nameParts[0];
         let lastName = nameParts.slice(1).join(" ") || "-";
 
-        // 4. TELEGRAM SEND (Оставляем как было)
         let msg = `<b>📊 GRWD Audit Submission</b>\n`;
         msg += `➖➖➖➖➖➖➖\n`;
         msg += `🏷 <b>Branch:</b> ${currentBranch ? currentBranch.toUpperCase() : 'ROOT'}\n\n`;
@@ -1294,7 +1251,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             })
         }).catch(err => console.error("TG Error:", err));
 
-        // 5. HUBSPOT SEND (INTEGRATION)
         const hsData = {
             "submittedAt": Date.now(),
             "fields": [
@@ -1311,7 +1267,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             }
         };
 
-        // Используем URL API (не JS embed, чтобы не показывать форму визуально)
         const hsUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${HS_PORTAL_ID}/${HS_FORM_ID}`;
 
         fetch(hsUrl, {
@@ -1327,7 +1282,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         })
         .catch(error => console.error('HS Network Error:', error));
 
-        // 6. GA4 / GTM EVENT
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
             'event': 'generate_lead',
@@ -1337,27 +1291,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
         console.log("Analytics Event Sent: generate_lead");
     }
-        // 5. Smart Logo Logic (Scroll Top vs Go Home)
     const logoLinks = document.querySelectorAll('.js-logo-action');
     
     logoLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            // Получаем текущий путь (например, /index.html или просто /)
             const path = window.location.pathname;
-            const isHomePage = path === '/' || path.endsWith('index.html') || path.endsWith('/grwd/'); // Учитываем папку, если есть
+            const isHomePage = path === '/' || path.endsWith('/') || path.endsWith('/grwd/');
 
             if (isHomePage) {
-                // Если мы уже на главной - не перезагружаем, а скроллим вверх
                 e.preventDefault();
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
                 });
                 
-                // Опционально: убираем хэш из URL (очищаем адресную строку)
                 history.pushState("", document.title, window.location.pathname + window.location.search);
             }
-            // Если мы НЕ на главной - сработает стандартный href="index.html"
         });
     });
     </script>
