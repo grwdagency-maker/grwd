@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="76" height="76"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="76" height="76"><svg width="76" height="76" viewBox="0 0 76 76" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M76 0V76H0V0H76ZM10.9336 56.918L34.7852 33.0664H20.8926V21.6006H54.4922V55.2002H43.0254V41.042L19.001 65.0664H65.0664V10.9336H10.9336V56.918Z" fill="white"></path>
+<path d="M76 0V76H0V0H76ZM10.9336 56.918L34.7852 33.0664H20.8926V21.6006H54.4922V55.2002H43.0254V41.042L19.001 65.0664H65.0664V10.9336H10.9336V56.918Z" fill="#01FFFF"></path>
 </svg></svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
 @media (prefers-color-scheme: dark) { :root { filter: invert(100%); } }
 </style></svg>
