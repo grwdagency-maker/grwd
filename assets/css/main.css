@@ -812,3 +812,19 @@ a.mh-brand {
     align-items: center;
     gap: 10px;
 }
+
+/* Контроль логотипа в хедере */
+#header .logo img {
+    /* Гарантируем белый цвет независимо от настроек системы */
+    filter: brightness(1) contrast(1); 
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.9; /* Чуть приглушим в покое для стиля */
+}
+
+#header .logo:hover img {
+    opacity: 1;
+    /* Мягкое неоновое свечение (бело-голубоватое) */
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7)) 
+            drop-shadow(0 0 2px rgba(0, 255, 255, 0.5));
+    transform: scale(1.03);
+}
