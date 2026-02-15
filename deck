@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TJIKKO Pitch Deck</title>
+    <style>
+        :root {
+            --primary: #6B46C1;
+            --secondary: #2D3748;
+            --accent: #4FD1C5;
+            --bg: #F7FAFC;
+            --text: #1A202C;
+            --white: #ffffff;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
+        section { min-height: 100vh; padding: 60px; display: flex; flex-direction: column; justify-content: center; border-bottom: 2px solid #edf2f7; box-sizing: border-box; }
+        h1, h2 { color: var(--primary); margin-top: 0; }
+        h1 { font-size: 3.5rem; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .card { background: var(--white); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .highlight { font-weight: bold; color: var(--primary); }
+        .stat-box { text-align: center; padding: 20px; border-radius: 8px; background: #EBF4FF; }
+        .stat-val { font-size: 2.5rem; display: block; font-weight: 800; color: var(--primary); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 15px; border-bottom: 1px solid #e2e8f0; }
+        th { background: var(--primary); color: white; }
+        .comparison-bar { height: 30px; background: #cbd5e0; border-radius: 15px; position: relative; margin: 10px 0; }
+        .bar-fill { height: 100%; border-radius: 15px; background: var(--primary); }
+    </style>
+</head>
+<body>
+
+<section style="background: linear-gradient(135deg, #6B46C1 0%, #434190 100%); color: white; text-align: center;">
+    <h1>TJIKKO [cite: 1]</h1>
+    <p style="font-size: 1.5rem;">To live in harmony with natural rhythms, achieve goals without burnout, and find balance in any circumstances. [cite: 2]</p>
+</section>
+
+<section>
+    <h2>The Problem: "Planning Overwhelm"</h2>
+    <div class="grid">
+        <div>
+            <p>Our target audience (Millennials & older Gen Z) [cite: 3] is "app-sick." [cite: 8]</p>
+            <ul>
+                <li>8 in 10 are aware stress impacts their health[cite: 19].</li>
+                <li>They use 5-7 different life management apps[cite: 21].</li>
+                <li>Each app works in isolation—no data sharing, no adaptation[cite: 36, 37].</li>
+                <li><strong>Result:</strong> More apps = More cognitive load = More stress[cite: 38].</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>The Fragmentation Cost</h3>
+            <div class="comparison-bar"><div class="bar-fill" style="width: 100%;"></div></div>
+            <p>Current Fragmented Spend: <strong>$548/year</strong> [cite: 35]</p>
+            <div class="comparison-bar"><div class="bar-fill" style="width: 43%; background: var(--accent);"></div></div>
+            <p>TJIKKO Target: <strong>$180-$240/year</strong> [cite: 56]</p>
+            <p class="highlight">We are not competing; we are replacing. [cite: 41, 43]</p>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Market Opportunity</h2>
+    
+    <div class="grid">
+        <div class="stat-box">
+            <span class="stat-val">60M</span>
+            <p>Engaged wellness/astrology app users (30% of market) [cite: 87]</p>
+        </div>
+        <div class="stat-box">
+            <span class="stat-val">$2B</span>
+            <p>Potential annual revenue at $10/user [cite: 88]</p>
+        </div>
+    </div>
+    <p>Astrology is the "Discovery Channel" [cite: 100] with a 20-25% CAGR[cite: 89]. 65% of the target demo follows astrology content[cite: 23].</p>
+</section>
+
+<section>
+    <h2>The Solution: One Adaptive Platform [cite: 104]</h2>
+    
+    <div class="grid">
+        <div class="card">
+            <h3>User Features [cite: 103, 105, 106]</h3>
+            <ul>
+                <li><strong>Planner:</strong> Manages tasks/calendars[cite: 103].</li>
+                <li><strong>Tracker:</strong> Monitors sleep, mood, and health[cite: 105].</li>
+                <li><strong>Analyst:</strong> Intelligent energy/efficiency forecasts[cite: 106].</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>The AI Edge [cite: 107]</h3>
+            <p>Adaptive AI planning adjusts schedules in real-time based on your actual energy levels and data, not just intuition[cite: 107, 108].</p>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Superior Unit Economics [cite: 134]</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Notion [cite: 136]</th>
+                <th>Motion [cite: 137]</th>
+                <th>TJIKKO [cite: 139]</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Annual ARPU</td>
+                <td>$120 [cite: 138]</td>
+                <td>$228 [cite: 138]</td>
+                <td><strong>$180-$240</strong> [cite: 138]</td>
+            </tr>
+            <tr>
+                <td>LTV/CAC</td>
+                <td>3-5x [cite: 146]</td>
+                <td>4-6x [cite: 147]</td>
+                <td><strong>8-12x</strong> [cite: 148]</td>
+            </tr>
+            <tr>
+                <td>6-mo Churn</td>
+                <td>40-60% [cite: 149]</td>
+                <td>40-50% [cite: 149]</td>
+                <td><strong><20%</strong> [cite: 149]</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><em>*Lower CAC via organic astrology discovery[cite: 150]. **Higher LTV via wallet consolidation[cite: 151].</em></p>
+</section>
+
+<section>
+    <h2>$40K Seed: Proving the Thesis [cite: 248]</h2>
+    <div class="grid">
+        <div class="card">
+            <ul>
+                <li><strong>$20,000:</strong> Development & Design (MVP + AI Prototype) [cite: 249, 251]</li>
+                <li><strong>$8,000:</strong> AI & Analytics (Pattern recognition engine) [cite: 252, 253]</li>
+                <li><strong>$7,000:</strong> Marketing & Testing (Astrology acquisition) [cite: 255, 256]</li>
+                <li><strong>$5,000:</strong> Operating & Legal [cite: 259]</li>
+            </ul>
+        </div>
+        <div>
+            <p class="highlight">Success Metric: [cite: 261]</p>
+            <p>100 paying users proving they have replaced 2+ apps with Tjikko, with a retention rate >30%[cite: 261].</p>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
